@@ -1,0 +1,6 @@
+@ReserveIO_HostAddress = http://localhost:5243
+
+GET {{ReserveIO_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
