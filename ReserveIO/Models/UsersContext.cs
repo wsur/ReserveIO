@@ -10,6 +10,12 @@ namespace ReserveIO.Models
 			: base(options)
 		{
 			Database.EnsureCreated();
+			if (!Users.Any())
+			{
+				Users.Add(new User { Name = "Tom", Age = 26 });
+				Users.Add(new User { Name = "Alice", Age = 31 });
+				SaveChanges();
+			}
 		}
 	}
 }

@@ -15,12 +15,12 @@ namespace ReserveIO.Controllers
 		public UsersController(UsersContext context) 
 		{
 			db = context;
-			if (!db.Users.Any())
+/*			if (!db.Users.Any())
 			{
 				db.Users.Add(new User { Name = "Tom", Age = 26 });
 				db.Users.Add(new User { Name = "Alice", Age = 31 });
 				db.SaveChanges();
-			}
+			}*/
 
 		}
 		[HttpGet]
