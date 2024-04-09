@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace ReserveIO
 {
@@ -10,14 +11,22 @@ namespace ReserveIO
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-			string con = "Server=(localdb)\\mssqllocaldb;Database=usersdbstore;Trusted_Connection=True;";
-			// Add services to the container.
+			//----------Переменные конфигурации appsettings.json----------------------//
+			var builder_config = new ConfigurationBuilder();
+			builder_config.SetBasePath(Directory.GetCurrentDirectory());
+			builder_config.AddJsonFile("appsettings.json");//установка файла конфигурации
+			var config = builder_config.Build();
+			//string con = "Server=(localdb)\\mssqllocaldb;Database=usersdbstore;Trusted_Connection=True;";
+			var connectionString = config.GetConnectionString("MSSqlDB");
+			//-----------------------------------------------------------------------//
 
+
+			// Add services to the container.
 			builder.Services.AddControllers();//используем контроллеры без представлений
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
-			builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(con));//задаём контекст приложению
+			builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(connectionString));//задаём контекст приложению
 
 			var app = builder.Build();
 
