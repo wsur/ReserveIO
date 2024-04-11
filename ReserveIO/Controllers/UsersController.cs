@@ -11,6 +11,7 @@ namespace ReserveIO.Controllers
 	[Route("api/[controller]")]
 	public class UsersController : ControllerBase
 	{
+		CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 		UsersContext db;
 		public UsersController(UsersContext context)
 		{
@@ -26,7 +27,26 @@ namespace ReserveIO.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<User>>> Get()
 		{
-			return await db.Users.ToListAsync();
+			try
+			{
+				var users = await Task.Run(() =>
+				{
+					return db.Users.ToListAsync(cancellationTokenSource.Token);
+				});
+				Thread.Sleep(100);
+				if(users == null)
+				{
+					cancellationTokenSource.Cancel();//прошло 100мс после выполнения и нет пользователей
+					cancellationTokenSource.Token.ThrowIfCancellationRequested(); // генерируем исключение
+				}
+
+				return Ok(users);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			//return await db.Users.ToListAsync(cancellationTokenSource.Token);
 		}
 		[HttpGet("{id}")]
 		public async Task<ActionResult<User>> Get(int id)
