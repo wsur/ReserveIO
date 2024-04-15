@@ -67,14 +67,16 @@ namespace ReserveIO.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<User>> Delete(int id)
 		{
-			User user = db.Users.FirstOrDefault(x => x.Id == id);
-			if (user == null)
-			{
-				return NotFound();
-			}
-			db.Users.Remove(user);
+			User user = new User { Id = id};//создание объекта-заглушки
+			var result = db.Remove(user);
 			await db.SaveChangesAsync();
-			return Ok(user);
+			if (result != null)
+			{
+				return Ok();
+			}
+			else
+				return NotFound();
+
 		}
 	}
 }
