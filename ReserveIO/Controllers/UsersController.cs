@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ReserveIO.Controllers
 {
@@ -34,6 +30,11 @@ namespace ReserveIO.Controllers
 		{
 			return await db.Users.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 		}
+		/// <summary>
+		/// Methon get is used for getting element with exact id
+		/// </summary>
+		/// <param name="cancellationToken">There is cancellation token</param>
+		/// <returns><see cref="T:ReserveIO.Models.User"/>with exact id from the database </returns>
 		[HttpGet("{id}")]
 		public async Task<ActionResult<User>> Get(int id, CancellationToken cancellationToken)
 		{

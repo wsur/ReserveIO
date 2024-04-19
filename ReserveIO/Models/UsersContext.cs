@@ -9,15 +9,7 @@ namespace ReserveIO.Models
 		public UsersContext(DbContextOptions<UsersContext> options)
 			: base(options)
 		{
-			//Database.EnsureDeleted();//Странная вещь. Зачем это нужно, чтобы каждый раз новую создавать? В чём смысл?
 			Database.EnsureCreated();
-/*			if (!Users.Any())
-			{
-				Users.Add(new User { Name = "Tom", Age = 26 });
-				Users.Add(new User { Name = "Alice", Age = 31 });
-				SaveChanges();
-			}*/
-
 		}
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
