@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
 
@@ -10,8 +9,8 @@ namespace ReserveIO.Controllers
 	[Route("api/[controller]")]
 	public class RolesController : ControllerBase
 	{
-		RolesContext roles_db;
-		public RolesController(RolesContext context)
+		readonly UsersContext roles_db;
+		public RolesController(UsersContext context)
 		{
 			roles_db = context;
 
@@ -65,7 +64,7 @@ namespace ReserveIO.Controllers
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.Role"/> with given id from the database if succeded</returns>
 		[HttpPut]
-		public async Task<ActionResult<User>> Put(Role role, CancellationToken cancellationToken)
+		public async Task<ActionResult<Role>> Put(Role role, CancellationToken cancellationToken)
 		{
 			if (role == null)
 			{

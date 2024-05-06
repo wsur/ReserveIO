@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
+//using ReserveIO.Repositories;
 
 namespace ReserveIO.Controllers
 {
@@ -8,7 +9,7 @@ namespace ReserveIO.Controllers
 	[Route("api/[controller]")]
 	public class UsersController : ControllerBase
 	{
-		UsersContext db;
+		readonly UsersContext db;
 		public UsersController(UsersContext context)
 		{
 			db = context;
