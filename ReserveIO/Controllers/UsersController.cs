@@ -10,6 +10,7 @@ namespace ReserveIO.Controllers
 	public class UsersController : ControllerBase
 	{
 		readonly UsersContext db;
+
 		public UsersController(UsersContext context)
 		{
 			db = context;
@@ -30,6 +31,7 @@ namespace ReserveIO.Controllers
 		public async Task<ActionResult<IEnumerable<User>>> Get(CancellationToken cancellationToken)
 		{
 			return await db.Users.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+
 		}
 		/// <summary>
 		/// Methon get is used for getting element with exact id
