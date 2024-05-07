@@ -12,6 +12,7 @@ namespace ReserveIO.Models
 		public DbSet<Role> Roles { get; set; }
 		public DbSet<UserRole>  UserRoles { get; set; }
 
+
 		public UsersContext(DbContextOptions<UsersContext> options/*, Assembly assembly*/)
 			: base(options)
 		{
