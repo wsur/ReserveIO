@@ -4,11 +4,8 @@ namespace ReserveIO.Models
 {
 	public class UserRole
 	{
-		[Key]
-		[Required]
-		public int User_ID { get; set; }
+		public int UserId { get; set; }
 
-		[Required]
-		public int Role_ID { get; set; }
+		public int RoleId { get; set; }
 	}
 }
