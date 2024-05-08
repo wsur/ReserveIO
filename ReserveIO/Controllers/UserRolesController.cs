@@ -31,7 +31,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("{id}")]
 	public async Task<ActionResult<UserRole>> Get(int id, CancellationToken cancellationToken)
 	{
-		UserRole userRole = await db.UserRoles.FirstOrDefaultAsync(x => x.User_ID == id, cancellationToken);
+		UserRole userRole = await db.UserRoles.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 		if (userRole == null)
 			return NotFound();
 		return new ObjectResult(userRole);
@@ -67,7 +67,7 @@ namespace ReserveIO.Controllers
 		{
 			return BadRequest();
 		}
-		if (!db.UserRoles.Any(x => x.User_ID == userRole.User_ID))
+		if (!db.UserRoles.Any(x => x.UserId == userRole.UserId))
 		{
 			return NotFound();
 		}
@@ -85,7 +85,7 @@ namespace ReserveIO.Controllers
 	[HttpDelete("{id}")]
 	public async Task<ActionResult<User>> Delete(int id, CancellationToken cancellationToken)
 	{
-		UserRole userRole = new UserRole { User_ID = id };//создание объекта-заглушки
+		UserRole userRole = new UserRole { UserId = id };//создание объекта-заглушки
 		var result = db.Remove(userRole);
 		await db.SaveChangesAsync(cancellationToken);
 		if (result != null)

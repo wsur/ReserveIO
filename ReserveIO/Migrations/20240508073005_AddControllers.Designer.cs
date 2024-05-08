@@ -11,8 +11,8 @@ using ReserveIO.Models;
 namespace ReserveIO.Migrations
 {
     [DbContext(typeof(UsersContext))]
-    [Migration("20240507042642_AddUserRolesController")]
-    partial class AddUserRolesController
+    [Migration("20240508073005_AddControllers")]
+    partial class AddControllers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,35 +26,35 @@ namespace ReserveIO.Migrations
 
             modelBuilder.Entity("ReserveIO.Models.Role", b =>
                 {
-                    b.Property<int>("Role_ID")
+                    b.Property<int>("RoleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Role_ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
 
-                    b.Property<string>("Role_Name")
+                    b.Property<string>("RoleName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Role_ID");
+                    b.HasKey("RoleId");
 
                     b.ToTable("Roles");
 
                     b.HasData(
                         new
                         {
-                            Role_ID = 1,
-                            Role_Name = "Lessee"
+                            RoleId = 1,
+                            RoleName = "Lessee"
                         },
                         new
                         {
-                            Role_ID = 2,
-                            Role_Name = "Lessor"
+                            RoleId = 2,
+                            RoleName = "Lessor"
                         },
                         new
                         {
-                            Role_ID = 3,
-                            Role_Name = "App_Owner"
+                            RoleId = 3,
+                            RoleName = "App_Owner"
                         });
                 });
 
@@ -106,40 +106,54 @@ namespace ReserveIO.Migrations
 
             modelBuilder.Entity("ReserveIO.Models.UserRole", b =>
                 {
-                    b.Property<int>("User_ID")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("User_ID"));
-
-                    b.Property<int>("Role_ID")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.HasKey("User_ID");
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles");
 
                     b.HasData(
                         new
                         {
-                            User_ID = 1,
-                            Role_ID = 1
+                            UserId = 1,
+                            RoleId = 1
                         },
                         new
                         {
-                            User_ID = 2,
-                            Role_ID = 1
+                            UserId = 2,
+                            RoleId = 1
                         },
                         new
                         {
-                            User_ID = 3,
-                            Role_ID = 2
+                            UserId = 3,
+                            RoleId = 2
                         },
                         new
                         {
-                            User_ID = 4,
-                            Role_ID = 3
+                            UserId = 4,
+                            RoleId = 3
                         });
+                });
+
+            modelBuilder.Entity("ReserveIO.Models.UserRole", b =>
+                {
+                    b.HasOne("ReserveIO.Models.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReserveIO.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

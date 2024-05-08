@@ -7,9 +7,8 @@ namespace ReserveIO.Models
 	//[EntityTypeConfiguration(typeof(RoleConfiguration))]
 	public class Role
 	{
-		[Key]
-		public int Role_ID { get; set; }
-		[Required]
-		public string Role_Name { get; set; }
+		public int RoleId { get; set; }
+
+		public string RoleName { get; set; }
 	}
 }
