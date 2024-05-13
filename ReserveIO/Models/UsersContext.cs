@@ -15,12 +15,17 @@ namespace ReserveIO.Models
 
 		public DbSet<UserRole> UserRoles { get; set; }
 
+		public DbSet<Service> Services { get; set; }
+
+		public DbSet<SummaryTable> SummaryTables { get; set; }
+
+		public DbSet<Room> Rooms { get; set; }
 
 		public UsersContext(DbContextOptions<UsersContext> options)
 			: base(options)
 		{
-			//Database.EnsureDeleted();
-			//Database.EnsureCreated(); //вызов этого метода при  использовании миграции вызовет ошибку
+			Database.EnsureDeleted();
+			Database.EnsureCreated(); //вызов этого метода при  использовании миграции вызовет ошибку
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
