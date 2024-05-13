@@ -16,7 +16,7 @@ namespace ReserveIO.Configurations
 					new() { UserId = 1, RoleId = 1 },
 					new() { UserId = 2, RoleId = 1 },
 					new() { UserId = 3, RoleId = 2 },
-					new() { UserId = 4, RoleId = 3 }
+					//new() { UserId = 4, RoleId = 3 }
 				});
 			builder
 			.HasKey(k => new { k.UserId, k.RoleId });
