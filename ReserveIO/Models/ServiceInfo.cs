@@ -8,6 +8,5 @@
 							
 		public int ReserveId { get; set; }
 
-		public SummaryTable Reserve { get; set; }
 	}
 }

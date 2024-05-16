@@ -23,11 +23,13 @@ namespace ReserveIO.Configurations
 			builder
 			.HasOne<Role>()
 			.WithMany()
-			.HasForeignKey(e => e.RoleId);
+			.HasForeignKey(e => e.RoleId)
+			.OnDelete(DeleteBehavior.ClientNoAction);
 			builder
 			.HasOne<User>()
 			.WithMany()
-			.HasForeignKey(e => e.UserId);
+			.HasForeignKey(e => e.UserId)
+			.OnDelete(DeleteBehavior.ClientNoAction);
 		}
 	}
 }

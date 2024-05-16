@@ -67,12 +67,13 @@ namespace ReserveIO.Controllers
 		{
 			return BadRequest();
 		}
-		if (!db.UserRoles.Any(x => x.UserId == userRole.UserId))
+		UserRole userRole1 = await db.UserRoles.FirstOrDefaultAsync(x => x.UserId == userRole.UserId, cancellationToken);
+		if (userRole1 == null)
 		{
-			return NotFound();
+			return NotFound("Такой сущности нет");
 		}
-
-		db.Update(userRole);
+		db.Remove(userRole1);//все поля ключевые, нельзя изменить просто так
+		db.Add(userRole);
 		await db.SaveChangesAsync(cancellationToken);
 		return Ok(userRole);
 	}
@@ -85,15 +86,18 @@ namespace ReserveIO.Controllers
 	[HttpDelete("{id}")]
 	public async Task<ActionResult<User>> Delete(int id, CancellationToken cancellationToken)
 	{
-		UserRole userRole = new UserRole { UserId = id };//создание объекта-заглушки
+		UserRole userRole = await db.UserRoles.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+		if (userRole == null)
+			return NotFound("У пользователя не определена роль");
+			//UserRole userRole = new UserRole { UserId = id };//создание объекта-заглушки
 		var result = db.Remove(userRole);
 		await db.SaveChangesAsync(cancellationToken);
 		if (result != null)
 		{
-			return Ok();
+			return Ok(userRole);
 		}
 		else
-			return NotFound();
+			return NotFound("Удаление не произошло");
 
 	}
 }

@@ -18,10 +18,11 @@ namespace ReserveIO.Configurations
 						//new () {Id = 4,ServiceId = 3, ReserveId = 4}
 			});
 			builder.HasKey(x => x.Id);
-			builder.HasOne<Service>()
+			builder.HasOne<Service>() 
 			.WithMany()
-			.HasForeignKey(x => x.ServiceId);
-			builder.HasOne<SummaryTable>(x => x.Reserve)
+			.HasForeignKey(x => x.ServiceId)
+			.OnDelete(DeleteBehavior.ClientNoAction);
+			builder.HasOne<SummaryTable>()
 			.WithMany()
 			.HasForeignKey(x => x.ReserveId);
 		}
