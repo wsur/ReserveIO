@@ -19,7 +19,10 @@ namespace ReserveIO.Configurations
 			builder.HasKey(x => x.UserId);
 			builder
 			.HasOne<User>()
-			.WithOne();
+			.WithOne()
+			.HasForeignKey<UserLogPass>(x => x.UserId)
+			.IsRequired()
+			.OnDelete(DeleteBehavior.ClientNoAction);
 		}
 	}
 }

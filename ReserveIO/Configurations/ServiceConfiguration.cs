@@ -19,9 +19,11 @@ namespace ReserveIO.Configurations
 			builder.HasKey(x => x.ServiceId);
 			builder.HasOne<User>()
 			.WithMany()
-			.HasForeignKey(x => x.UserId);
+			.HasForeignKey(x => x.UserId)
+			.OnDelete(DeleteBehavior.ClientNoAction);
 			builder.HasMany<ServiceInfo>()
-			.WithOne();
+			.WithOne()
+			.OnDelete(DeleteBehavior.ClientNoAction);
 
 		}
 	}

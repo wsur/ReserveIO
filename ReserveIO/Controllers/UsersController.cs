@@ -89,15 +89,13 @@ namespace ReserveIO.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<User>> Delete(int id, CancellationToken cancellationToken)
 		{
-			User user = new User { Id = id};//создание объекта-заглушки
-			var result = db.Remove(user);
+			User user = await db.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+			if (user == null)
+				return NotFound("Такого пользователя нет");
+			user.Delete = true;//проставляем состояние удаления
+			db.Update(user);
 			await db.SaveChangesAsync(cancellationToken);
-			if (result != null)
-			{
-				return Ok();
-			}
-			else
-				return NotFound();
+			return Ok(user);
 
 		}
 	}

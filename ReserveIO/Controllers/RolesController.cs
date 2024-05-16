@@ -54,8 +54,8 @@ namespace ReserveIO.Controllers
 			}
 
 			roles_db.Roles.Add(role);
-			await roles_db.SaveChangesAsync(cancellationToken);
-			return Ok(role);
+			var r = await roles_db.SaveChangesAsync(cancellationToken);
+			return Ok(r);
 		}
 		/// <summary>
 		/// Method PUT is used for modify existing users in the database
@@ -88,15 +88,13 @@ namespace ReserveIO.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<Role>> Delete(int id, CancellationToken cancellationToken)
 		{
-			Role role = new Role { RoleId = id };//создание объекта-заглушки
-			var result = roles_db.Remove(role);
-			await roles_db.SaveChangesAsync(cancellationToken);
-			if (result != null)
-			{
-				return Ok();
-			}
-			else
+			Role role = await roles_db.Roles.FirstOrDefaultAsync(x => x.RoleId == id, cancellationToken);
+			if (role == null)
 				return NotFound();
+			role.Delete = true;
+			roles_db.Update(role);
+			var r = await roles_db.SaveChangesAsync(cancellationToken);
+			return Ok(role);
 
 		}
 	}

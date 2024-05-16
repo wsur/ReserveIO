@@ -87,15 +87,17 @@ namespace ReserveIO.Controllers
 			[HttpDelete("{id}")]
 			public async Task<ActionResult<SummaryTable>> Delete(int id, CancellationToken cancellationToken)
 			{
-				SummaryTable summaryTable = new SummaryTable { SummaryId = id };//создание объекта-заглушки
+				SummaryTable summaryTable = await summaryDb.SummaryTables.FirstOrDefaultAsync(x => x.SummaryId == id, cancellationToken);
+				if (summaryTable == null)
+					return NotFound("Такой записи нет");
 				var result = summaryDb.Remove(summaryTable);
 				await summaryDb.SaveChangesAsync(cancellationToken);
 				if (result != null)
 				{
-					return Ok();
+					return Ok(summaryTable);
 				}
 				else
-					return NotFound();
+					return NotFound("Операция не выполнена");
 
 			}
 		}

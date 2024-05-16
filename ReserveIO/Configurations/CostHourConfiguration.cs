@@ -8,6 +8,7 @@ namespace ReserveIO.Configurations
 	{
 		public void Configure(EntityTypeBuilder<CostHour> builder)
 		{
+			builder.HasKey(x => x.CostId);
 			builder.HasData(
 				new CostHour[]
 				{
@@ -16,7 +17,6 @@ namespace ReserveIO.Configurations
 					new() { CostId = 3, CostRoomId = 2, TimeStampTZ = DateTime.Now, Cost = 2500 },
 					new() { CostId = 4, CostRoomId = 3, TimeStampTZ = DateTime.Now, Cost = 2500 }
 				});
-			builder.HasKey(x => x.CostId);
 			builder.HasOne<Room>()
 			.WithMany()
 			.HasForeignKey(x => x.CostRoomId);
