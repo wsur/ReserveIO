@@ -18,6 +18,9 @@ namespace ReserveIO.Controllers
 		/// </summary>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns>All <see cref="T:ReserveIO.Models.Room"/> from the database</returns>
+		/// <response code="200">Успешное выполнение</response>
+		/// <response code="400">Ошибка API</response>
+		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<Room>>> Get(CancellationToken cancellationToken)
 		{
@@ -30,6 +33,9 @@ namespace ReserveIO.Controllers
 		/// <param name="id">Input Room</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.Room"/>with exact id from the database </returns>
+		/// <response code="200">Успешное выполнение</response>
+		/// <response code="400">Ошибка API</response>
+		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Room>> Get(int id, CancellationToken cancellationToken)
 		{
@@ -44,6 +50,9 @@ namespace ReserveIO.Controllers
 		/// <param name="room">Input Room</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.Room"/></returns>
+		/// <response code="200">Успешное выполнение</response>
+		/// <response code="400">Ошибка API</response>
+		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpPost]
 		public async Task<ActionResult<Room>> Post(Room room, CancellationToken cancellationToken)
 		{
@@ -62,6 +71,9 @@ namespace ReserveIO.Controllers
 		/// <param name="room">Input Room</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.Room"/> with given id from the database if succeded</returns>
+		/// <response code="200">Успешное выполнение</response>
+		/// <response code="400">Ошибка API</response>
+		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpPut]
 		public async Task<ActionResult<Room>> Put(Room room, CancellationToken cancellationToken)
 		{
@@ -84,6 +96,9 @@ namespace ReserveIO.Controllers
 		/// <param name="id">Id for user that we want to delete from the database</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="M:ControllerBase.OK()"/> if operation is succeded</returns>
+		/// <response code="200">Успешное выполнение</response>
+		/// <response code="400">Ошибка API</response>
+		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<Room>> Delete(int id, CancellationToken cancellationToken)
 		{

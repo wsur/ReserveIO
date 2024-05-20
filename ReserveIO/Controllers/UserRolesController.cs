@@ -13,12 +13,15 @@ namespace ReserveIO.Controllers
 			usersContext = context;
 
 		}
-	/// <summary>
-	/// Methon get is used for getting all elements from database
-	/// </summary>
-	/// <param name="cancellationToken">There is cancellation token</param>
-	/// <returns>All <see cref="T:ReserveIO.Models.UserRoles"/> from the database</returns>
-	[HttpGet]
+		/// <summary>
+		/// Methon get is used for getting all elements from database
+		/// </summary>
+		/// <param name="cancellationToken">There is cancellation token</param>
+		/// <returns>All <see cref="T:ReserveIO.Models.UserRoles"/> from the database</returns>
+		/// <response code="200">Успешное выполнение</response>
+		/// <response code="400">Ошибка API</response>
+		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[HttpGet]
 	public async Task<ActionResult<IEnumerable<UserRole>>> Get(CancellationToken cancellationToken)
 	{
 		return await usersContext.UserRoles.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
@@ -29,6 +32,9 @@ namespace ReserveIO.Controllers
 		/// <param name="id">Input User/Role connection</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserRoles"/>with exact id from the database </returns>
+		/// <response code="200">Успешное выполнение</response>
+		/// <response code="400">Ошибка API</response>
+		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpGet("{id}")]
 	public async Task<ActionResult<UserRole>> Get(int id, CancellationToken cancellationToken)
 	{
@@ -43,6 +49,9 @@ namespace ReserveIO.Controllers
 		/// <param name="userRole">Input UserRole</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserRoles"/></returns>
+		/// <response code="200">Успешное выполнение</response>
+		/// <response code="400">Ошибка API</response>
+		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpPost]
 	public async Task<ActionResult<UserRole>> Post(UserRole userRole, CancellationToken cancellationToken)
 	{
@@ -61,6 +70,9 @@ namespace ReserveIO.Controllers
 		/// <param name="userRole">Input UserRole</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserRoles"/> with given id from the database if succeded</returns>
+		/// <response code="200">Успешное выполнение</response>
+		/// <response code="400">Ошибка API</response>
+		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpPut]
 	public async Task<ActionResult<UserRole>> Put(UserRole userRole, CancellationToken cancellationToken)
 	{
@@ -78,13 +90,16 @@ namespace ReserveIO.Controllers
 		await usersContext.SaveChangesAsync(cancellationToken);
 		return Ok(userRole);
 	}
-	/// <summary>
-	/// Method Delete is used for Deleting userRole that exist in database
-	/// </summary>
-	/// <param name="id">Id for userRole that we want to delete from the database</param>
-	/// <param name="cancellationToken">There is cancellation token</param>
-	/// <returns><see cref="M:ControllerBase.OK()"/> if operation is succeded</returns>
-	[HttpDelete("{id}")]
+		/// <summary>
+		/// Method Delete is used for Deleting userRole that exist in database
+		/// </summary>
+		/// <param name="id">Id for userRole that we want to delete from the database</param>
+		/// <param name="cancellationToken">There is cancellation token</param>
+		/// <returns><see cref="M:ControllerBase.OK()"/> if operation is succeded</returns>
+		/// <response code="200">Успешное выполнение</response>
+		/// <response code="400">Ошибка API</response>
+		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[HttpDelete("{id}")]
 	public async Task<ActionResult<User>> Delete(int id, CancellationToken cancellationToken)
 	{
 		UserRole userRole = await usersContext.UserRoles.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
