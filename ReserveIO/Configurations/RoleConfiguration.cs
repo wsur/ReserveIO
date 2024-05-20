@@ -9,13 +9,13 @@ namespace ReserveIO.Configurations
 		public void Configure(EntityTypeBuilder<Role> builder)
 		{
 			builder.HasKey(x => x.RoleId);
-			builder.HasData(
+/*			builder.HasData(
 				new Role[]
 				{
 					new() { RoleId = 1, RoleName="Lessee", Delete = false },
 					new() { RoleId = 2, RoleName="Lessor", Delete = false },
 					new() { RoleId = 3, RoleName = "App_Owner",  Delete = false}
-				});
+				});*/
 			builder.HasMany<UserRole>()
 			.WithOne()
 			.OnDelete(DeleteBehavior.ClientNoAction);

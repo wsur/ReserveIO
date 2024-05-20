@@ -49,36 +49,6 @@ namespace ReserveIO.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("CostHours");
-
-                    b.HasData(
-                        new
-                        {
-                            CostId = 1,
-                            Cost = 2500,
-                            CostRoomId = 1,
-                            TimeStampTZ = new DateTime(2024, 5, 16, 11, 47, 34, 601, DateTimeKind.Local).AddTicks(3292)
-                        },
-                        new
-                        {
-                            CostId = 2,
-                            Cost = 2500,
-                            CostRoomId = 1,
-                            TimeStampTZ = new DateTime(2024, 5, 16, 11, 47, 34, 601, DateTimeKind.Local).AddTicks(3305)
-                        },
-                        new
-                        {
-                            CostId = 3,
-                            Cost = 2500,
-                            CostRoomId = 2,
-                            TimeStampTZ = new DateTime(2024, 5, 16, 11, 47, 34, 601, DateTimeKind.Local).AddTicks(3306)
-                        },
-                        new
-                        {
-                            CostId = 4,
-                            Cost = 2500,
-                            CostRoomId = 3,
-                            TimeStampTZ = new DateTime(2024, 5, 16, 11, 47, 34, 601, DateTimeKind.Local).AddTicks(3307)
-                        });
                 });
 
             modelBuilder.Entity("ReserveIO.Models.Role", b =>
@@ -99,26 +69,6 @@ namespace ReserveIO.Migrations
                     b.HasKey("RoleId");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = 1,
-                            Delete = false,
-                            RoleName = "Lessee"
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            Delete = false,
-                            RoleName = "Lessor"
-                        },
-                        new
-                        {
-                            RoleId = 3,
-                            Delete = false,
-                            RoleName = "App_Owner"
-                        });
                 });
 
             modelBuilder.Entity("ReserveIO.Models.Room", b =>
@@ -142,36 +92,6 @@ namespace ReserveIO.Migrations
                     b.HasKey("RoomId");
 
                     b.ToTable("Rooms");
-
-                    b.HasData(
-                        new
-                        {
-                            RoomId = 1,
-                            OnOff = true,
-                            RoomName = "Plank",
-                            ServiceOn = true
-                        },
-                        new
-                        {
-                            RoomId = 2,
-                            OnOff = true,
-                            RoomName = "Newtone",
-                            ServiceOn = true
-                        },
-                        new
-                        {
-                            RoomId = 3,
-                            OnOff = true,
-                            RoomName = "Einstein",
-                            ServiceOn = true
-                        },
-                        new
-                        {
-                            RoomId = 4,
-                            OnOff = true,
-                            RoomName = "Gilbert",
-                            ServiceOn = true
-                        });
                 });
 
             modelBuilder.Entity("ReserveIO.Models.Service", b =>
@@ -202,29 +122,6 @@ namespace ReserveIO.Migrations
                     b.HasIndex("UserId1");
 
                     b.ToTable("Services");
-
-                    b.HasData(
-                        new
-                        {
-                            ServiceId = 1,
-                            ServiceCost = 3000f,
-                            ServiceName = "аренда офисного помещения 30 кв под митапы",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            ServiceId = 2,
-                            ServiceCost = 10000f,
-                            ServiceName = "Аренда магазинной площади под городское мероприятие 400 кв",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            ServiceId = 3,
-                            ServiceCost = 10000f,
-                            ServiceName = "тест моего помещения",
-                            UserId = 3
-                        });
                 });
 
             modelBuilder.Entity("ReserveIO.Models.ServiceInfo", b =>
@@ -253,26 +150,6 @@ namespace ReserveIO.Migrations
                     b.HasIndex("SummaryTableSummaryId");
 
                     b.ToTable("ServiceInfos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ReserveId = 1,
-                            ServiceId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ReserveId = 2,
-                            ServiceId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ReserveId = 3,
-                            ServiceId = 3
-                        });
                 });
 
             modelBuilder.Entity("ReserveIO.Models.SummaryTable", b =>
@@ -307,32 +184,6 @@ namespace ReserveIO.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("SummaryTables");
-
-                    b.HasData(
-                        new
-                        {
-                            SummaryId = 1,
-                            Datetime = new DateTime(2024, 5, 16, 11, 47, 34, 605, DateTimeKind.Local).AddTicks(3187),
-                            EndTime = new DateTime(2024, 5, 13, 16, 30, 0, 0, DateTimeKind.Unspecified),
-                            LesseeId = 2,
-                            RoomId = 2
-                        },
-                        new
-                        {
-                            SummaryId = 2,
-                            Datetime = new DateTime(2024, 5, 16, 11, 47, 34, 605, DateTimeKind.Local).AddTicks(3279),
-                            EndTime = new DateTime(2024, 5, 13, 16, 40, 0, 0, DateTimeKind.Unspecified),
-                            LesseeId = 2,
-                            RoomId = 1
-                        },
-                        new
-                        {
-                            SummaryId = 3,
-                            Datetime = new DateTime(2024, 5, 16, 11, 47, 34, 605, DateTimeKind.Local).AddTicks(3287),
-                            EndTime = new DateTime(2024, 5, 13, 16, 50, 0, 0, DateTimeKind.Unspecified),
-                            LesseeId = 3,
-                            RoomId = 3
-                        });
                 });
 
             modelBuilder.Entity("ReserveIO.Models.User", b =>
@@ -356,36 +207,6 @@ namespace ReserveIO.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Age = 23,
-                            Delete = false,
-                            Name = "Tom"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Age = 26,
-                            Delete = false,
-                            Name = "Alice"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Age = 28,
-                            Delete = false,
-                            Name = "Sam"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Age = 24,
-                            Delete = false,
-                            Name = "Eugene"
-                        });
                 });
 
             modelBuilder.Entity("ReserveIO.Models.UserLogPass", b =>
@@ -404,32 +225,6 @@ namespace ReserveIO.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("UserLogPasses");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            Login = "Tom1",
-                            Password = "123"
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            Login = "Alice1",
-                            Password = "123"
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            Login = "Sam1",
-                            Password = "123"
-                        },
-                        new
-                        {
-                            UserId = 4,
-                            Login = "Eugene1",
-                            Password = "123"
-                        });
                 });
 
             modelBuilder.Entity("ReserveIO.Models.UserRole", b =>
@@ -445,23 +240,6 @@ namespace ReserveIO.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            RoleId = 2
-                        });
                 });
 
             modelBuilder.Entity("ReserveIO.Models.UserRoom", b =>
@@ -477,28 +255,6 @@ namespace ReserveIO.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("UserRooms");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoomId = 1
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            RoomId = 1
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            RoomId = 2
-                        },
-                        new
-                        {
-                            UserId = 4,
-                            RoomId = 3
-                        });
                 });
 
             modelBuilder.Entity("ReserveIO.Models.CostHour", b =>

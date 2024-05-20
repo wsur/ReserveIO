@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Exchange.WebServices.Data;
 using ReserveIO.Models;
 
 namespace ReserveIO.Controllers
@@ -95,23 +96,38 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Method Delete is used for Deleting user that exist in database
 		/// </summary>
-		/// <param name="id">Id for user that we want to delete from the database</param>
+		/// <param name="userId">Id пользователя</param>
+		/// <param name="roomId">Id комнаты в его собственности</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="M:ControllerBase.OK()"/> if operation is succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpDelete("[action]")]
-		public async Task<ActionResult<UserRoom>> Delete(int id, CancellationToken cancellationToken)
+		public async Task<ActionResult<UserRoom>> Delete(int userId, int roomId, CancellationToken cancellationToken)
 		{
-			UserRoom userRoom = await usersContext.UserRooms.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
-			if (userRoom == null)
+			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRoom> result = null;
+			UserRoom s1 = null;
+			
+			var userRoomMany = usersContext.UserRooms.Where(u =>
+			EF.Functions.Like(u.UserId.ToString(), userId.ToString())
+			);
+			foreach (UserRoom s in userRoomMany)
+			{
+				if (s.RoomId == roomId)
+				{
+					result = usersContext.Remove(s);
+					s1 = s;
+				}
+			}
+
+			if (s1 == null)
 				return NotFound("Такой записи нет");
-			var result = usersContext.Remove(userRoom);
+
 			await usersContext.SaveChangesAsync(cancellationToken);
 			if (result != null)
 			{
-				return Ok(userRoom);
+				return Ok(s1);
 			}
 			else
 				return NotFound("Операция не выполнена");

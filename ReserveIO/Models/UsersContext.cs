@@ -32,7 +32,8 @@ namespace ReserveIO.Models
 			: base(options)
 		{
 			//Database.EnsureDeleted();
-			//Database.EnsureCreated(); //вызов этого метода при  использовании миграции вызовет ошибку
+			//Database.EnsureCreated(); //вызов этого метода при использовании миграции вызовет ошибку
+
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)

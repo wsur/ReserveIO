@@ -8,13 +8,13 @@ namespace ReserveIO.Configurations
 	{
 		public void Configure(EntityTypeBuilder<SummaryTable> builder)
 		{
-			builder.HasData(
+/*			builder.HasData(
 				new SummaryTable[]
 				{
 					new() { SummaryId = 1, LesseeId = 2, RoomId = 2, Datetime = DateTime.Now, EndTime = DateTime.Parse("13.05.2024 16:30:00")},
 					new() { SummaryId = 2, LesseeId = 2, RoomId = 1, Datetime = DateTime.Now, EndTime = DateTime.Parse("13.05.2024 16:40:00")},
 					new() { SummaryId = 3, LesseeId = 3, RoomId = 3, Datetime = DateTime.Now, EndTime = DateTime.Parse("13.05.2024 16:50:00")},
-				});
+				});*/
 			builder.HasKey(x => x.SummaryId);
 
 			builder.HasOne<User>()

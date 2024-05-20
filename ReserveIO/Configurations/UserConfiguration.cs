@@ -10,14 +10,14 @@ namespace ReserveIO.Configurations
 		public void Configure(EntityTypeBuilder<User> builder)
 		{
 			builder.HasKey(x => x.Id);
-			builder.HasData(
+/*			builder.HasData(
 				new User[]
 				{
 					new() { Id = 1, Name="Tom", Age = 23, Delete = false},
 					new() { Id = 2, Name = "Alice", Age = 26, Delete = false },
 					new() { Id = 3, Name = "Sam", Age = 28, Delete = false },
 					new() { Id = 4, Name = "Eugene", Age = 24, Delete = false }
-				});
+				});*/
 			builder.HasOne<UserLogPass>()
 			.WithOne()
 			.HasForeignKey<UserLogPass>(x=>x.UserId)
