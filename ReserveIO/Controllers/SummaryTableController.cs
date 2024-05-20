@@ -8,10 +8,10 @@ namespace ReserveIO.Controllers
 		[Route("api/[controller]")]
 		public class SummaryTableController : ControllerBase
 		{
-			readonly UsersContext summaryDb;
+			readonly UsersContext usersContext;
 			public SummaryTableController(UsersContext context)
 			{
-				summaryDb = context;
+				usersContext = context;
 
 			}
 			/// <summary>
@@ -22,18 +22,19 @@ namespace ReserveIO.Controllers
 			[HttpGet]
 			public async Task<ActionResult<IEnumerable<SummaryTable>>> Get(CancellationToken cancellationToken)
 			{
-				return await summaryDb.SummaryTables.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+				return await usersContext.SummaryTables.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 			}
 
-			/// <summary>
-			/// Methon get is used for getting element with exact id
-			/// </summary>
-			/// <param name="cancellationToken">There is cancellation token</param>
-			/// <returns><see cref="T:ReserveIO.Models.SummaryTable"/>with exact id from the database </returns>
-			[HttpGet("{id}")]
+		/// <summary>
+		/// Methon get is used for getting element with exact id
+		/// </summary>
+		/// <param name="id">Input SummaryTable</param>
+		/// <param name="cancellationToken">There is cancellation token</param>
+		/// <returns><see cref="T:ReserveIO.Models.SummaryTable"/>with exact id from the database </returns>
+		[HttpGet("{id}")]
 			public async Task<ActionResult<SummaryTable>> Get(int id, CancellationToken cancellationToken)
 			{
-				SummaryTable summaryTable = await summaryDb.SummaryTables.FirstOrDefaultAsync(x => x.SummaryId == id, cancellationToken);
+				SummaryTable summaryTable = await usersContext.SummaryTables.FirstOrDefaultAsync(x => x.SummaryId == id, cancellationToken);
 				if (summaryTable == null)
 					return NotFound();
 				return new ObjectResult(summaryTable);
@@ -41,7 +42,7 @@ namespace ReserveIO.Controllers
 			/// <summary>
 			/// Method POST is used for add brand-new user to database without writing an user id
 			/// </summary>
-			/// <param name="SummaryTable">Input SummaryTable</param>
+			/// <param name="summaryTable">Input SummaryTable</param>
 			/// <param name="cancellationToken">There is cancellation token</param>
 			/// <returns><see cref="T:ReserveIO.Models.SummaryTable"/></returns>
 			[HttpPost]
@@ -52,14 +53,14 @@ namespace ReserveIO.Controllers
 					return BadRequest();
 				}
 
-				summaryDb.SummaryTables.Add(summaryTable);
-				await summaryDb.SaveChangesAsync(cancellationToken);
+				usersContext.SummaryTables.Add(summaryTable);
+				await usersContext.SaveChangesAsync(cancellationToken);
 				return Ok(summaryTable);
 			}
 			/// <summary>
 			/// Method PUT is used for modify existing users in the database
 			/// </summary>
-			/// <param name="SummaryTable">Input SummaryTable</param>
+			/// <param name="summaryTable">Input SummaryTable</param>
 			/// <param name="cancellationToken">There is cancellation token</param>
 			/// <returns><see cref="T:ReserveIO.Models.SummaryTable"/> with given id from the database if succeded</returns>
 			[HttpPut]
@@ -69,13 +70,13 @@ namespace ReserveIO.Controllers
 				{
 					return BadRequest();
 				}
-				if (!summaryDb.SummaryTables.Any(x => x.SummaryId == summaryTable.SummaryId))
+				if (!usersContext.SummaryTables.Any(x => x.SummaryId == summaryTable.SummaryId))
 				{
 					return NotFound();
 				}
 
-				summaryDb.Update(summaryTable);
-				await summaryDb.SaveChangesAsync(cancellationToken);
+				usersContext.Update(summaryTable);
+				await usersContext.SaveChangesAsync(cancellationToken);
 				return Ok(summaryTable);
 			}
 			/// <summary>
@@ -87,11 +88,11 @@ namespace ReserveIO.Controllers
 			[HttpDelete("{id}")]
 			public async Task<ActionResult<SummaryTable>> Delete(int id, CancellationToken cancellationToken)
 			{
-				SummaryTable summaryTable = await summaryDb.SummaryTables.FirstOrDefaultAsync(x => x.SummaryId == id, cancellationToken);
+				SummaryTable summaryTable = await usersContext.SummaryTables.FirstOrDefaultAsync(x => x.SummaryId == id, cancellationToken);
 				if (summaryTable == null)
 					return NotFound("Такой записи нет");
-				var result = summaryDb.Remove(summaryTable);
-				await summaryDb.SaveChangesAsync(cancellationToken);
+				var result = usersContext.Remove(summaryTable);
+				await usersContext.SaveChangesAsync(cancellationToken);
 				if (result != null)
 				{
 					return Ok(summaryTable);

@@ -8,10 +8,10 @@ namespace ReserveIO.Controllers
 	[Route("api/[controller]")]
 	public class UserRoomController : ControllerBase
 	{
-		readonly UsersContext userRoomDb;
+		readonly UsersContext usersContext;
 		public UserRoomController(UsersContext context)
 		{
-			userRoomDb = context;
+			usersContext = context;
 
 		}
 
@@ -23,18 +23,19 @@ namespace ReserveIO.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<UserRoom>>> Get(CancellationToken cancellationToken)
 		{
-			return await userRoomDb.UserRooms.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			return await usersContext.UserRooms.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 		}
 
 		/// <summary>
 		/// Methon get is used for getting element with exact id
 		/// </summary>
+		/// <param name="id">Input User/Room connection</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserRoom"/>with exact id from the database </returns>
 		[HttpGet("{id}")]
 		public async Task<ActionResult<UserRoom>> Get(int id, CancellationToken cancellationToken)
 		{
-			UserRoom userRoom = await userRoomDb.UserRooms.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+			UserRoom userRoom = await usersContext.UserRooms.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 			if (userRoom == null)
 				return NotFound();
 			return new ObjectResult(userRoom);
@@ -42,7 +43,7 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Method POST is used for add brand-new user to database without writing an user id
 		/// </summary>
-		/// <param name="UserRoom">Input UserRoom</param>
+		/// <param name="userRoom">Input UserRoom</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserRoom"/></returns>
 		[HttpPost]
@@ -53,14 +54,14 @@ namespace ReserveIO.Controllers
 				return BadRequest();
 			}
 
-			userRoomDb.UserRooms.Add(userRoom);
-			await userRoomDb.SaveChangesAsync(cancellationToken);
+			usersContext.UserRooms.Add(userRoom);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(userRoom);
 		}
 		/// <summary>
 		/// Method PUT is used for modify existing users in the database
 		/// </summary>
-		/// <param name="UserRoom">Input UserRoom</param>
+		/// <param name="userRoom">Input UserRoom</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserRoom"/> with given id from the database if succeded</returns>
 		[HttpPut]
@@ -70,13 +71,13 @@ namespace ReserveIO.Controllers
 			{
 				return BadRequest();
 			}
-			if (!userRoomDb.UserRooms.Any(x => x.UserId == userRoom.UserId))
+			if (!usersContext.UserRooms.Any(x => x.UserId == userRoom.UserId))
 			{
 				return NotFound();
 			}
 
-			userRoomDb.Update(userRoom);
-			await userRoomDb.SaveChangesAsync(cancellationToken);
+			usersContext.Update(userRoom);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(userRoom);
 		}
 		/// <summary>
@@ -88,11 +89,11 @@ namespace ReserveIO.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<UserRoom>> Delete(int id, CancellationToken cancellationToken)
 		{
-			UserRoom userRoom = await userRoomDb.UserRooms.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+			UserRoom userRoom = await usersContext.UserRooms.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 			if (userRoom == null)
 				return NotFound("Такой записи нет");
-			var result = userRoomDb.Remove(userRoom);
-			await userRoomDb.SaveChangesAsync(cancellationToken);
+			var result = usersContext.Remove(userRoom);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			if (result != null)
 			{
 				return Ok(userRoom);

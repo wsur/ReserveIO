@@ -9,10 +9,10 @@ namespace ReserveIO.Controllers
 	[Route("api/[controller]")]
 	public class RolesController : ControllerBase
 	{
-		readonly UsersContext roles_db;
+		readonly UsersContext usersContext;
 		public RolesController(UsersContext context)
 		{
-			roles_db = context;
+			usersContext = context;
 
 		}
 		/// <summary>
@@ -23,18 +23,19 @@ namespace ReserveIO.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<Role>>> Get(CancellationToken cancellationToken)
 		{
-			return await roles_db.Roles.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			return await usersContext.Roles.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 		}
 
 		/// <summary>
 		/// Methon get is used for getting element with exact id
 		/// </summary>
+		/// <param name="id">Input Role</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.Role"/>with exact id from the database </returns>
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Role>> Get(int id, CancellationToken cancellationToken)
 		{
-			Role role = await roles_db.Roles.FirstOrDefaultAsync(x => x.RoleId == id, cancellationToken);
+			Role role = await usersContext.Roles.FirstOrDefaultAsync(x => x.RoleId == id, cancellationToken);
 			if (role == null)
 				return NotFound();
 			return new ObjectResult(role);
@@ -53,9 +54,13 @@ namespace ReserveIO.Controllers
 				return BadRequest();
 			}
 
-			roles_db.Roles.Add(role);
-			var r = await roles_db.SaveChangesAsync(cancellationToken);
-			return Ok(r);
+			usersContext.Roles.Add(role);
+			var r = await usersContext.SaveChangesAsync(cancellationToken);
+			if (r == 0)
+			{
+				return BadRequest("Изменения не записались в базу");
+			}
+			return Ok(role);
 		}
 		/// <summary>
 		/// Method PUT is used for modify existing users in the database
@@ -70,13 +75,13 @@ namespace ReserveIO.Controllers
 			{
 				return BadRequest();
 			}
-			if (!roles_db.Roles.Any(x => x.RoleId == role.RoleId))
+			if (!usersContext.Roles.Any(x => x.RoleId == role.RoleId))
 			{
 				return NotFound();
 			}
 
-			roles_db.Update(role);
-			await roles_db.SaveChangesAsync(cancellationToken);
+			usersContext.Update(role);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(role);
 		}
 		/// <summary>
@@ -88,12 +93,12 @@ namespace ReserveIO.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<Role>> Delete(int id, CancellationToken cancellationToken)
 		{
-			Role role = await roles_db.Roles.FirstOrDefaultAsync(x => x.RoleId == id, cancellationToken);
+			Role role = await usersContext.Roles.FirstOrDefaultAsync(x => x.RoleId == id, cancellationToken);
 			if (role == null)
 				return NotFound();
 			role.Delete = true;
-			roles_db.Update(role);
-			var r = await roles_db.SaveChangesAsync(cancellationToken);
+			usersContext.Update(role);
+			var r = await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(role);
 
 		}
