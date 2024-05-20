@@ -8,14 +8,14 @@ namespace ReserveIO.Configurations
 	{
 		public void Configure(EntityTypeBuilder<UserRoom> builder)
 		{
-			builder.HasData(
+/*			builder.HasData(
 				new UserRoom[]
 				{
 					new() { UserId = 1, RoomId = 1 },
 					new() { UserId = 2, RoomId = 1 },
 					new() { UserId = 3, RoomId = 2 },
 					new() { UserId = 4, RoomId = 3 }
-				});
+				});*/
 			builder.HasKey(x => new { x.UserId, x.RoomId});
 			builder.HasOne<User>()
 			.WithMany()
