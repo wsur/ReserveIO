@@ -54,7 +54,7 @@ namespace ReserveIO.Controllers
 		/// <returns><see cref="T:ReserveIO.Models.UserRoom"/></returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
-		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		/// <response code="500">Ошибка API (Таких ID нет, проблема с ID)</response>
 		[HttpPost]
 		public async Task<ActionResult<UserRoom>> Post(UserRoom userRoom, CancellationToken cancellationToken)
 		{

@@ -53,7 +53,7 @@ namespace ReserveIO.Controllers
 		/// <returns><see cref="T:ReserveIO.Models.SummaryTable"/></returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
-		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
 		[HttpPost]
 			public async Task<ActionResult<SummaryTable>> Post(SummaryTable summaryTable, CancellationToken cancellationToken)
 			{

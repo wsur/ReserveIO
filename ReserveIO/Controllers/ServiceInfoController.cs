@@ -52,7 +52,7 @@ namespace ReserveIO.Controllers
 		/// <returns><see cref="T:ReserveIO.Models.ServiceInfo"/></returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
-		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		/// <response code="500">Ошибка API (Таких ID нет, проблема с ID сущностей, либо id записи не оставили равным 0)</response>
 		[HttpPost]
 		public async Task<ActionResult<ServiceInfo>> Post(ServiceInfo serviceInfo, CancellationToken cancellationToken)
 		{
