@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
+using System.Linq;
 
 namespace ReserveIO.Controllers
 {
@@ -21,7 +22,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpGet]
+		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<ServiceInfo>>> Get(CancellationToken cancellationToken)
 		{
 			return await usersContext.ServiceInfos.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
@@ -36,7 +37,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpGet("{id}")]
+		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<ServiceInfo>> Get(int id, CancellationToken cancellationToken)
 		{
 			ServiceInfo serviceInfo = await usersContext.ServiceInfos.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
@@ -53,7 +54,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (Таких ID нет, проблема с ID сущностей, либо id записи не оставили равным 0)</response>
-		[HttpPost]
+		[HttpPost("[action]")]
 		public async Task<ActionResult<ServiceInfo>> Post(ServiceInfo serviceInfo, CancellationToken cancellationToken)
 		{
 			if (serviceInfo == null)
@@ -74,7 +75,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpPut]
+		[HttpPut("[action]")]
 		public async Task<ActionResult<ServiceInfo>> Put(ServiceInfo serviceInfo, CancellationToken cancellationToken)
 		{
 			if (serviceInfo == null)
@@ -93,21 +94,35 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Method Delete is used for Deleting user that exist in database
 		/// </summary>
-		/// <param name="id">Id for user that we want to delete from the database</param>
+		/// <param name="serviceId">ID сервиса</param>
+		/// <param name="reserveId">ID заказа</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="M:ControllerBase.OK()"/> if operation is succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpDelete("{id}")]
-		public async Task<ActionResult<ServiceInfo>> Delete(int id, CancellationToken cancellationToken)
+		[HttpDelete("[action]")]
+		public async Task<ActionResult<ServiceInfo>> Delete(int serviceId, int reserveId, CancellationToken cancellationToken)
 		{
-			ServiceInfo ServiceInfo = new ServiceInfo { Id = id };//создание объекта-заглушки
-			var result = usersContext.Remove(ServiceInfo);
+			//ServiceInfo ServiceInfo = new ServiceInfo { Id = id };//создание объекта-заглушки
+			//получаем все объекты с данным reserveId
+			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<ServiceInfo> result = null;
+			ServiceInfo s1 = null;
+			var serviceInfoMany = usersContext.ServiceInfos.Where(u =>
+			EF.Functions.Like(u.ReserveId.ToString(),reserveId.ToString())
+			);
+			foreach(ServiceInfo s in serviceInfoMany)
+			{
+				if(s.ServiceId == serviceId)
+				{
+					result = usersContext.Remove(s);
+					s1 = s;
+				}
+			}
 			await usersContext.SaveChangesAsync(cancellationToken);
 			if (result != null)
 			{
-				return Ok();
+				return Ok(s1);
 			}
 			else
 				return NotFound();

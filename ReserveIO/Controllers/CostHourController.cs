@@ -21,7 +21,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpGet]
+		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<CostHour>>> Get(CancellationToken cancellationToken)
 		{
 			return await usersContext.CostHours.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
@@ -35,7 +35,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpGet("{id}")]
+		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<CostHour>> Get(int id, CancellationToken cancellationToken)
 		{
 			CostHour costHour = await usersContext.CostHours.FirstOrDefaultAsync(x => x.CostId == id, cancellationToken);
@@ -52,7 +52,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
-		[HttpPost]
+		[HttpPost("[action]")]
 		public async Task<ActionResult<CostHour>> Post(CostHour costHour, CancellationToken cancellationToken)
 		{
 			if (costHour == null)
@@ -73,7 +73,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpPut]
+		[HttpPut("[action]")]
 		public async Task<ActionResult<CostHour>> Put(CostHour costHour, CancellationToken cancellationToken)
 		{
 			
@@ -98,7 +98,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpDelete("{id}")]
+		[HttpDelete("[action]")]
 		public async Task<ActionResult<CostHour>> Delete(int id, CancellationToken cancellationToken)
 		{
 			CostHour costHour = new CostHour { CostId = id };//создание объекта-заглушки

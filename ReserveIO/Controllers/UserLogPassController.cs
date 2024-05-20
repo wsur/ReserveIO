@@ -22,7 +22,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpGet]
+		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<UserLogPass>>> Get(CancellationToken cancellationToken)
 		{
 			return await usersContext.UserLogPasses.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
@@ -37,7 +37,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpGet("{id}")]
+		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<UserLogPass>> Get(int id, CancellationToken cancellationToken)
 		{
 			UserLogPass userLogPass = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
@@ -54,7 +54,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
-		[HttpPost]
+		[HttpPost("[action]")]
 		public async Task<ActionResult<UserLogPass>> Post(UserLogPass userLogPass, CancellationToken cancellationToken)
 		{
 			if (userLogPass == null)
@@ -75,7 +75,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpPut]
+		[HttpPut("[action]")]
 		public async Task<ActionResult<UserLogPass>> Put(UserLogPass userLogPass, CancellationToken cancellationToken)
 		{
 			if (userLogPass == null)
@@ -100,7 +100,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpDelete("{id}")]
+		[HttpDelete("[action]")]
 		public async Task<ActionResult<UserLogPass>> Delete(int id, CancellationToken cancellationToken)
 		{
 			//UserLogPass userLogPass = new UserLogPass { UserId = id };//создание объекта-заглушки
