@@ -8,10 +8,10 @@ namespace ReserveIO.Controllers
 	[Route("api/[controller]")]
 	public class CostHourController : ControllerBase
 	{
-		readonly UsersContext CostHourDb;
+		readonly UsersContext usersContext;
 		public CostHourController(UsersContext context)
 		{
-			CostHourDb = context;
+			usersContext = context;
 		}
 		/// <summary>
 		/// Methon get is used for getting all elements from database
@@ -21,7 +21,7 @@ namespace ReserveIO.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<CostHour>>> Get(CancellationToken cancellationToken)
 		{
-			return await CostHourDb.CostHours.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			return await usersContext.CostHours.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 		}
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("{id}")]
 		public async Task<ActionResult<CostHour>> Get(int id, CancellationToken cancellationToken)
 		{
-			CostHour costHour = await CostHourDb.CostHours.FirstOrDefaultAsync(x => x.CostId == id, cancellationToken);
+			CostHour costHour = await usersContext.CostHours.FirstOrDefaultAsync(x => x.CostId == id, cancellationToken);
 			if (costHour == null)
 				return NotFound();
 			return new ObjectResult(costHour);
@@ -40,7 +40,7 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Method POST is used for add brand-new user to database without writing an user id
 		/// </summary>
-		/// <param name="CostHour">Input CostHour</param>
+		/// <param name="costHour">Input CostHour</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.CostHour"/></returns>
 		[HttpPost]
@@ -51,14 +51,14 @@ namespace ReserveIO.Controllers
 				return BadRequest();
 			}
 
-			CostHourDb.CostHours.Add(costHour);
-			await CostHourDb.SaveChangesAsync(cancellationToken);
+			usersContext.CostHours.Add(costHour);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(costHour);
 		}
 		/// <summary>
 		/// Method PUT is used for modify existing users in the database
 		/// </summary>
-		/// <param name="CostHour">Input CostHour</param>
+		/// <param name="costHour">Input CostHour</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.CostHour"/> with given id from the database if succeded</returns>
 		[HttpPut]
@@ -69,12 +69,12 @@ namespace ReserveIO.Controllers
 			{
 				return BadRequest("Данные не введены");
 			}
-			if (!CostHourDb.CostHours.Any(x => x.CostId == costHour.CostId))
+			if (!usersContext.CostHours.Any(x => x.CostId == costHour.CostId))
 			{
 				return NotFound("Такой сущности нет");
 			}
-			CostHourDb.Update(costHour);
-			await CostHourDb.SaveChangesAsync(cancellationToken);
+			usersContext.Update(costHour);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(costHour);
 		}
 		/// <summary>
@@ -87,8 +87,8 @@ namespace ReserveIO.Controllers
 		public async Task<ActionResult<CostHour>> Delete(int id, CancellationToken cancellationToken)
 		{
 			CostHour costHour = new CostHour { CostId = id };//создание объекта-заглушки
-			var result = CostHourDb.Remove(costHour);
-			await CostHourDb.SaveChangesAsync(cancellationToken);
+			var result = usersContext.Remove(costHour);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			if (result != null)
 			{
 				return Ok();

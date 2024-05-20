@@ -8,10 +8,10 @@ namespace ReserveIO.Controllers
 	[Route("api/[controller]")]
 	public class ServiceController : ControllerBase
 	{
-		readonly UsersContext service_db;
+		readonly UsersContext usersContext;
 		public ServiceController(UsersContext context)
 		{
-			service_db = context;
+			usersContext = context;
 
 		}
 		/// <summary>
@@ -22,18 +22,19 @@ namespace ReserveIO.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<Service>>> Get(CancellationToken cancellationToken)
 		{
-			return await service_db.Services.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			return await usersContext.Services.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 		}
 
 		/// <summary>
 		/// Methon get is used for getting element with exact id
 		/// </summary>
+		/// <param name="id">Input Service</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.Service"/>with exact id from the database </returns>
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Service>> Get(int id, CancellationToken cancellationToken)
 		{
-			Service service = await service_db.Services.FirstOrDefaultAsync(x => x.ServiceId == id, cancellationToken);
+			Service service = await usersContext.Services.FirstOrDefaultAsync(x => x.ServiceId == id, cancellationToken);
 			if (service == null)
 				return NotFound();
 			return new ObjectResult(service);
@@ -52,8 +53,8 @@ namespace ReserveIO.Controllers
 				return BadRequest();
 			}
 
-			service_db.Services.Add(service);
-			await service_db.SaveChangesAsync(cancellationToken);
+			usersContext.Services.Add(service);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(service);
 		}
 		/// <summary>
@@ -69,13 +70,13 @@ namespace ReserveIO.Controllers
 			{
 				return BadRequest();
 			}
-			if (!service_db.Services.Any(x => x.ServiceId == service.ServiceId))
+			if (!usersContext.Services.Any(x => x.ServiceId == service.ServiceId))
 			{
 				return NotFound();
 			}
 
-			service_db.Update(service);
-			await service_db.SaveChangesAsync(cancellationToken);
+			usersContext.Update(service);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(service);
 		}
 		/// <summary>
@@ -87,11 +88,11 @@ namespace ReserveIO.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<Service>> Delete(int id, CancellationToken cancellationToken)
 		{
-			Service service = await service_db.Services.FirstOrDefaultAsync(x => x.ServiceId == id, cancellationToken);
+			Service service = await usersContext.Services.FirstOrDefaultAsync(x => x.ServiceId == id, cancellationToken);
 			if(service == null)
 				return NotFound("Такой записи нет");
-			var result = service_db.Remove(service);
-			await service_db.SaveChangesAsync(cancellationToken);
+			var result = usersContext.Remove(service);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			if (result != null)
 			{
 				return Ok(service);

@@ -7,10 +7,10 @@ namespace ReserveIO.Controllers
 	[Route("api/[controller]")]
 	public class UserRolesController : ControllerBase
 	{
-		readonly UsersContext db;
+		readonly UsersContext usersContext;
 		public UserRolesController(UsersContext context)
 		{
-			db = context;
+			usersContext = context;
 
 		}
 	/// <summary>
@@ -21,17 +21,18 @@ namespace ReserveIO.Controllers
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<UserRole>>> Get(CancellationToken cancellationToken)
 	{
-		return await db.UserRoles.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+		return await usersContext.UserRoles.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 	}
 		/// <summary>
 		/// Methon get is used for getting element with exact id
 		/// </summary>
+		/// <param name="id">Input User/Role connection</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserRoles"/>with exact id from the database </returns>
 		[HttpGet("{id}")]
 	public async Task<ActionResult<UserRole>> Get(int id, CancellationToken cancellationToken)
 	{
-		UserRole userRole = await db.UserRoles.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+		UserRole userRole = await usersContext.UserRoles.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 		if (userRole == null)
 			return NotFound();
 		return new ObjectResult(userRole);
@@ -50,8 +51,8 @@ namespace ReserveIO.Controllers
 			return BadRequest();
 		}
 
-		db.UserRoles.Add(userRole);
-		await db.SaveChangesAsync(cancellationToken);
+		usersContext.UserRoles.Add(userRole);
+		await usersContext.SaveChangesAsync(cancellationToken);
 		return Ok(userRole);
 	}
 		/// <summary>
@@ -67,14 +68,14 @@ namespace ReserveIO.Controllers
 		{
 			return BadRequest();
 		}
-		UserRole userRole1 = await db.UserRoles.FirstOrDefaultAsync(x => x.UserId == userRole.UserId, cancellationToken);
+		UserRole userRole1 = await usersContext.UserRoles.FirstOrDefaultAsync(x => x.UserId == userRole.UserId, cancellationToken);
 		if (userRole1 == null)
 		{
 			return NotFound("Такой сущности нет");
 		}
-		db.Remove(userRole1);//все поля ключевые, нельзя изменить просто так
-		db.Add(userRole);
-		await db.SaveChangesAsync(cancellationToken);
+		usersContext.Remove(userRole1);//все поля ключевые, нельзя изменить просто так
+		usersContext.Add(userRole);
+		await usersContext.SaveChangesAsync(cancellationToken);
 		return Ok(userRole);
 	}
 	/// <summary>
@@ -86,12 +87,12 @@ namespace ReserveIO.Controllers
 	[HttpDelete("{id}")]
 	public async Task<ActionResult<User>> Delete(int id, CancellationToken cancellationToken)
 	{
-		UserRole userRole = await db.UserRoles.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+		UserRole userRole = await usersContext.UserRoles.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 		if (userRole == null)
 			return NotFound("У пользователя не определена роль");
 			//UserRole userRole = new UserRole { UserId = id };//создание объекта-заглушки
-		var result = db.Remove(userRole);
-		await db.SaveChangesAsync(cancellationToken);
+		var result = usersContext.Remove(userRole);
+		await usersContext.SaveChangesAsync(cancellationToken);
 		if (result != null)
 		{
 			return Ok(userRole);

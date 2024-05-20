@@ -1,7 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using ReserveIO.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace ReserveIO
 {
@@ -25,8 +25,21 @@ namespace ReserveIO
 			builder.Services.AddControllers();//используем контроллеры без представлений
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
-			builder.Services.AddSwaggerGen();
-			builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(connectionString));//задаём контекст приложению
+			builder.Services.AddSwaggerGen(options =>
+			{
+				options.SwaggerDoc("v1", new OpenApiInfo
+				{
+					Version = "v1",
+					Title = "Reserve IO API",
+					Description = "WEB-API для приложения ReserveIO",
+				}
+				);
+				var basePath = AppContext.BaseDirectory;
+
+				var xmlPath = Path.Combine(basePath, "ReserveIO.xml");
+				options.IncludeXmlComments(xmlPath);
+			});
+					builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(connectionString));//задаём контекст приложению
 
 			var app = builder.Build();
 
@@ -34,7 +47,10 @@ namespace ReserveIO
 			if (app.Environment.IsDevelopment())
 			{
 				app.UseSwagger();
-				app.UseSwaggerUI();
+				app.UseSwaggerUI(c =>
+				{
+					c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+				});
 			}
 			app.UseDeveloperExceptionPage();
 

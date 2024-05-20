@@ -9,11 +9,11 @@ namespace ReserveIO.Controllers
 	[Route("api/[controller]")]
 	public class UsersController : ControllerBase
 	{
-		readonly UsersContext db;
+		readonly UsersContext usersContext;
 
 		public UsersController(UsersContext context)
 		{
-			db = context;
+			usersContext = context;
 
 		}
 		/// <summary>
@@ -24,18 +24,19 @@ namespace ReserveIO.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<User>>> Get(CancellationToken cancellationToken)
 		{
-			return await db.Users.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			return await usersContext.Users.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 
 		}
 		/// <summary>
 		/// Methon get is used for getting element with exact id
 		/// </summary>
+		/// <param name="id">Input User</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.User"/>with exact id from the database </returns>
 		[HttpGet("{id}")]
 		public async Task<ActionResult<User>> Get(int id, CancellationToken cancellationToken)
 		{
-			User user = await db.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+			User user = await usersContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 			if (user == null)
 				return NotFound();
 			return new ObjectResult(user);
@@ -54,8 +55,8 @@ namespace ReserveIO.Controllers
 				return BadRequest();
 			}
 
-			db.Users.Add(user);
-			await db.SaveChangesAsync(cancellationToken);
+			usersContext.Users.Add(user);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(user);
 		}
 		/// <summary>
@@ -71,13 +72,13 @@ namespace ReserveIO.Controllers
 			{
 				return BadRequest();
 			}
-			if (!db.Users.Any(x => x.Id == user.Id))
+			if (!usersContext.Users.Any(x => x.Id == user.Id))
 			{
 				return NotFound();
 			}
 
-			db.Update(user);
-			await db.SaveChangesAsync(cancellationToken);
+			usersContext.Update(user);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(user);
 		}
 		/// <summary>
@@ -89,12 +90,12 @@ namespace ReserveIO.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<User>> Delete(int id, CancellationToken cancellationToken)
 		{
-			User user = await db.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+			User user = await usersContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 			if (user == null)
 				return NotFound("Такого пользователя нет");
 			user.Delete = true;//проставляем состояние удаления
-			db.Update(user);
-			await db.SaveChangesAsync(cancellationToken);
+			usersContext.Update(user);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(user);
 
 		}

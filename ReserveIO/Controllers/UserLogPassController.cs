@@ -8,10 +8,10 @@ namespace ReserveIO.Controllers
 	[Route("api/[controller]")]
 	public class UserLogPassController : ControllerBase
 	{
-		readonly UsersContext LogPassDb;
+		readonly UsersContext usersContext;
 		public UserLogPassController(UsersContext context)
 		{
-			LogPassDb = context;
+			usersContext = context;
 
 		}
 		/// <summary>
@@ -22,18 +22,19 @@ namespace ReserveIO.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<UserLogPass>>> Get(CancellationToken cancellationToken)
 		{
-			return await LogPassDb.UserLogPasses.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			return await usersContext.UserLogPasses.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 		}
 
 		/// <summary>
 		/// Methon get is used for getting element with exact id
 		/// </summary>
+		/// <param name="id">Input UserlogPass</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserLogPass"/>with exact id from the database </returns>
 		[HttpGet("{id}")]
 		public async Task<ActionResult<UserLogPass>> Get(int id, CancellationToken cancellationToken)
 		{
-			UserLogPass userLogPass = await LogPassDb.UserLogPasses.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+			UserLogPass userLogPass = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 			if (userLogPass == null)
 				return NotFound();
 			return new ObjectResult(userLogPass);
@@ -52,8 +53,8 @@ namespace ReserveIO.Controllers
 				return BadRequest();
 			}
 
-			LogPassDb.UserLogPasses.Add(userLogPass);
-			await LogPassDb.SaveChangesAsync(cancellationToken);
+			usersContext.UserLogPasses.Add(userLogPass);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(userLogPass);
 		}
 		/// <summary>
@@ -69,13 +70,13 @@ namespace ReserveIO.Controllers
 			{
 				return BadRequest();
 			}
-			if (!LogPassDb.UserLogPasses.Any(x => x.UserId == userLogPass.UserId))
+			if (!usersContext.UserLogPasses.Any(x => x.UserId == userLogPass.UserId))
 			{
 				return NotFound();
 			}
 
-			LogPassDb.Update(userLogPass);
-			await LogPassDb.SaveChangesAsync(cancellationToken);
+			usersContext.Update(userLogPass);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(userLogPass);
 		}
 		/// <summary>
@@ -88,11 +89,11 @@ namespace ReserveIO.Controllers
 		public async Task<ActionResult<UserLogPass>> Delete(int id, CancellationToken cancellationToken)
 		{
 			//UserLogPass userLogPass = new UserLogPass { UserId = id };//создание объекта-заглушки
-			UserLogPass userLogPass = await LogPassDb.UserLogPasses.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+			UserLogPass userLogPass = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 			if (userLogPass == null)
 				return NotFound("Логин и пароль с данным id не был найден");
-			var result = LogPassDb.Remove(userLogPass);
-			await LogPassDb.SaveChangesAsync(cancellationToken);
+			var result = usersContext.Remove(userLogPass);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			if (result != null)
 			{
 				return Ok(userLogPass);

@@ -8,10 +8,10 @@ namespace ReserveIO.Controllers
 	[Route("api/[controller]")]
 	public class ServiceInfoController : ControllerBase
 	{
-		readonly UsersContext ServiceInfoDb;
+		readonly UsersContext usersContext;
 		public ServiceInfoController(UsersContext context)
 		{
-			ServiceInfoDb = context;
+			usersContext = context;
 		}
 		/// <summary>
 		/// Methon get is used for getting all elements from database
@@ -21,18 +21,19 @@ namespace ReserveIO.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<ServiceInfo>>> Get(CancellationToken cancellationToken)
 		{
-			return await ServiceInfoDb.ServiceInfos.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			return await usersContext.ServiceInfos.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 		}
 
 		/// <summary>
 		/// Methon get is used for getting element with exact id
 		/// </summary>
+		/// <param name="id">Input ServiceInfo</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.ServiceInfo"/>with exact id from the database </returns>
 		[HttpGet("{id}")]
 		public async Task<ActionResult<ServiceInfo>> Get(int id, CancellationToken cancellationToken)
 		{
-			ServiceInfo serviceInfo = await ServiceInfoDb.ServiceInfos.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+			ServiceInfo serviceInfo = await usersContext.ServiceInfos.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 			if (serviceInfo == null)
 				return NotFound();
 			return new ObjectResult(serviceInfo);
@@ -40,7 +41,7 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Method POST is used for add brand-new user to database without writing an user id
 		/// </summary>
-		/// <param name="ServiceInfo">Input ServiceInfo</param>
+		/// <param name="serviceInfo">Input ServiceInfo</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.ServiceInfo"/></returns>
 		[HttpPost]
@@ -51,14 +52,14 @@ namespace ReserveIO.Controllers
 				return BadRequest();
 			}
 
-			ServiceInfoDb.ServiceInfos.Add(serviceInfo);
-			await ServiceInfoDb.SaveChangesAsync(cancellationToken);
+			usersContext.ServiceInfos.Add(serviceInfo);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(serviceInfo);
 		}
 		/// <summary>
 		/// Method PUT is used for modify existing users in the database
 		/// </summary>
-		/// <param name="ServiceInfo">Input ServiceInfo</param>
+		/// <param name="serviceInfo">Input ServiceInfo</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.ServiceInfo"/> with given id from the database if succeded</returns>
 		[HttpPut]
@@ -68,13 +69,13 @@ namespace ReserveIO.Controllers
 			{
 				return BadRequest();
 			}
-			if (!ServiceInfoDb.ServiceInfos.Any(x => x.Id == serviceInfo.Id))
+			if (!usersContext.ServiceInfos.Any(x => x.Id == serviceInfo.Id))
 			{
 				return NotFound();
 			}
 
-			ServiceInfoDb.Update(serviceInfo);
-			await ServiceInfoDb.SaveChangesAsync(cancellationToken);
+			usersContext.Update(serviceInfo);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(serviceInfo);
 		}
 		/// <summary>
@@ -87,8 +88,8 @@ namespace ReserveIO.Controllers
 		public async Task<ActionResult<ServiceInfo>> Delete(int id, CancellationToken cancellationToken)
 		{
 			ServiceInfo ServiceInfo = new ServiceInfo { Id = id };//создание объекта-заглушки
-			var result = ServiceInfoDb.Remove(ServiceInfo);
-			await ServiceInfoDb.SaveChangesAsync(cancellationToken);
+			var result = usersContext.Remove(ServiceInfo);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			if (result != null)
 			{
 				return Ok();
