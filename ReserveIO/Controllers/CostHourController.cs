@@ -51,7 +51,7 @@ namespace ReserveIO.Controllers
 		/// <returns><see cref="T:ReserveIO.Models.CostHour"/></returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
-		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
 		[HttpPost]
 		public async Task<ActionResult<CostHour>> Post(CostHour costHour, CancellationToken cancellationToken)
 		{
@@ -92,7 +92,7 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Method Delete is used for Deleting user that exist in database
 		/// </summary>
-		/// <param name="id">Id for user that we want to delete from the database</param>
+		/// <param name="id">Id for cost note that we want to delete from the database</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="M:ControllerBase.OK()"/> if operation is succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
