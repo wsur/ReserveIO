@@ -23,7 +23,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpGet]
+		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<UserRoom>>> Get(CancellationToken cancellationToken)
 		{
 			return await usersContext.UserRooms.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
@@ -38,7 +38,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpGet("{id}")]
+		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<UserRoom>> Get(int id, CancellationToken cancellationToken)
 		{
 			UserRoom userRoom = await usersContext.UserRooms.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
@@ -55,7 +55,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (Таких ID нет, проблема с ID)</response>
-		[HttpPost]
+		[HttpPost("[action]")]
 		public async Task<ActionResult<UserRoom>> Post(UserRoom userRoom, CancellationToken cancellationToken)
 		{
 			if (userRoom == null)
@@ -76,7 +76,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpPut]
+		[HttpPut("[action]")]
 		public async Task<ActionResult<UserRoom>> Put(UserRoom userRoom, CancellationToken cancellationToken)
 		{
 			if (userRoom == null)
@@ -101,7 +101,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpDelete("{id}")]
+		[HttpDelete("[action]")]
 		public async Task<ActionResult<UserRoom>> Delete(int id, CancellationToken cancellationToken)
 		{
 			UserRoom userRoom = await usersContext.UserRooms.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);

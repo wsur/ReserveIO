@@ -21,7 +21,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpGet]
+		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<Room>>> Get(CancellationToken cancellationToken)
 		{
 			return await usersContext.Rooms.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
@@ -36,7 +36,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpGet("{id}")]
+		[HttpGet("([action]/{id}")]
 		public async Task<ActionResult<Room>> Get(int id, CancellationToken cancellationToken)
 		{
 			Room room = await usersContext.Rooms.FirstOrDefaultAsync(x => x.RoomId == id, cancellationToken);
@@ -53,7 +53,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
-		[HttpPost]
+		[HttpPost("[action]")]
 		public async Task<ActionResult<Room>> Post(Room room, CancellationToken cancellationToken)
 		{
 			if (room == null)
@@ -74,7 +74,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpPut]
+		[HttpPut("[action]")]
 		public async Task<ActionResult<Room>> Put(Room room, CancellationToken cancellationToken)
 		{
 			if (room == null)
@@ -99,7 +99,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[HttpDelete("{id}")]
+		[HttpDelete("[action]")]
 		public async Task<ActionResult<Room>> Delete(int id, CancellationToken cancellationToken)
 		{
 			Room Room = new Room { RoomId = id };//создание объекта-заглушки
