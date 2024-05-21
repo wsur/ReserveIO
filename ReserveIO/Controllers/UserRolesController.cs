@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Exchange.WebServices.Data;
 using ReserveIO.Models;
 namespace ReserveIO.Controllers
 {
@@ -100,17 +101,27 @@ namespace ReserveIO.Controllers
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpDelete("[action]")]
-	public async Task<ActionResult<User>> Delete(int id, CancellationToken cancellationToken)
+	public async Task<ActionResult<UserRole>> Delete(int userId, int roleId, CancellationToken cancellationToken)
 	{
-		UserRole userRole = await usersContext.UserRoles.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
-		if (userRole == null)
-			return NotFound("У пользователя не определена роль");
-			//UserRole userRole = new UserRole { UserId = id };//создание объекта-заглушки
-		var result = usersContext.Remove(userRole);
+			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRole> result = null;
+			UserRole s1 = null;
+			var userRoleMany = usersContext.UserRoles.Where(u =>
+			EF.Functions.Like(u.UserId.ToString(), userId.ToString())
+			);
+			foreach (UserRole s in userRoleMany)
+			{
+				if (s.RoleId == roleId)
+				{
+					result = usersContext.Remove(s);
+					s1 = s;
+				}
+			}
+		if (s1 == null)
+			return NotFound("У пользователя нет такой роли");
 		await usersContext.SaveChangesAsync(cancellationToken);
 		if (result != null)
 		{
-			return Ok(userRole);
+			return Ok(s1);
 		}
 		else
 			return NotFound("Удаление не произошло");
