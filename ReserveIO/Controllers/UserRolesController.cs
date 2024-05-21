@@ -68,29 +68,43 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Method PUT is used for modify existing users in the database
 		/// </summary>
-		/// <param name="userRole">Input UserRole</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserRoles"/> with given id from the database if succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpPut("[action]")]
-	public async Task<ActionResult<UserRole>> Put(UserRole userRole, CancellationToken cancellationToken)
+	public async Task<ActionResult<UserRole>> Put(int userId, int roleId, int userIdNew, int roleIdNew, CancellationToken cancellationToken)
 	{
-		if (userRole == null)
-		{
-			return BadRequest();
+			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRole> result = null;
+			UserRole s1 = new UserRole { UserId = 0 };//стандартная заглушка
+														//Необходимо сначала узнать id объекта -- получить его из бд.
+			var userRoomMany = usersContext.UserRoles.Where(u =>
+			EF.Functions.Like(u.UserId.ToString(), userId.ToString())
+			);
+			foreach (UserRole s in userRoomMany)
+			{
+				if (s.RoleId == roleId)
+				{
+					//меняем параметры сущности
+					s1.UserRoleId = s.UserRoleId;
+					//s1.UserRoleId = s.UserRoleId;
+					s1.UserId = userIdNew;
+					s1.RoleId = roleIdNew;
+					//т.к. ReserveId и ServiceId являются внешними ключами, то необходимо удалить сущность и создать новую.
+					usersContext.Remove(s);//удаляем
+					result = usersContext.Add(s1);
+				}
+			}
+			if (result != null)
+			{
+				//только в этом случае имеет смысл сохранять в бд данные.
+				await usersContext.SaveChangesAsync(cancellationToken);
+				return Ok(s1);
+			}
+			else
+				return NotFound("Данные не обновились");
 		}
-		UserRole userRole1 = await usersContext.UserRoles.FirstOrDefaultAsync(x => x.UserId == userRole.UserId, cancellationToken);
-		if (userRole1 == null)
-		{
-			return NotFound("Такой сущности нет");
-		}
-		usersContext.Remove(userRole1);//все поля ключевые, нельзя изменить просто так
-		usersContext.Add(userRole);
-		await usersContext.SaveChangesAsync(cancellationToken);
-		return Ok(userRole);
-	}
 		/// <summary>
 		/// Method Delete is used for Deleting userRole that exist in database
 		/// </summary>
