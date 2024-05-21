@@ -104,7 +104,7 @@ namespace ReserveIO.Controllers
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<ServiceInfo>> Delete(int serviceId, int reserveId, CancellationToken cancellationToken)
 		{
-			//ServiceInfo ServiceInfo = new ServiceInfo { Id = id };//создание объекта-заглушки
+			//сначала нужно получить объект с нужным id
 			//получаем все объекты с данным reserveId
 			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<ServiceInfo> result = null;
 			ServiceInfo s1 = null;

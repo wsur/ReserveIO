@@ -71,27 +71,51 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Method PUT is used for modify existing users in the database
 		/// </summary>
-		/// <param name="userRoom">Input UserRoom</param>
+		/// <param name="userId">Id пользователя в БД</param>
+		/// <param name="roomId">Id комнаты в БД</param>
+		/// <param name="userIdNew">Новый Id пользователя</param>
+		/// <param name="roomIdNew">Новый Id комнаты</param>
+		/// <param name="userRoom">Новая сущность</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserRoom"/> with given id from the database if succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[HttpPut("[action]")]
-		public async Task<ActionResult<UserRoom>> Put(UserRoom userRoom, CancellationToken cancellationToken)
+		public async Task<ActionResult<UserRoom>> Put(int userId, int roomId, int userIdNew, int roomIdNew, CancellationToken cancellationToken)
 		{
-			if (userRoom == null)
+			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRoom> result = null;
+			UserRoom s1 = new UserRoom { UserRoomId = 0};//стандартная заглушка
+			//Необходимо сначала узнать id объекта -- получить его из бд.
+			var userRoomMany = usersContext.UserRooms.Where(u =>
+			EF.Functions.Like(u.UserId.ToString(), userId.ToString())
+			);
+			foreach (UserRoom s in userRoomMany)
 			{
-				return BadRequest();
+				if (s.RoomId == roomId)
+				{
+					//меняем параметры сущности
+					s1.UserRoomId = s.UserRoomId;
+					//s1.UserRoomId = s.UserRoomId;
+					s1.RoomId = roomIdNew;
+					s1.UserId = userIdNew;
+					//т.к. roomId и userId являются внешними ключами, то необходимо удалить сущность и создать новую.
+					usersContext.Remove(s);//удаляем
+					result = usersContext.Add(s1);
+				}
 			}
-			if (!usersContext.UserRooms.Any(x => x.UserId == userRoom.UserId))
+			if (s1 == null)
 			{
-				return NotFound();
+				return NotFound("Такой сущности нет");
 			}
-
-			usersContext.Update(userRoom);
-			await usersContext.SaveChangesAsync(cancellationToken);
-			return Ok(userRoom);
+			if (result != null)
+			{
+				//только в этом случае имеет смысл сохранять в бд данные.
+				await usersContext.SaveChangesAsync(cancellationToken);
+				return Ok(s1);
+			}
+			else
+				return NotFound("Данные не обновились");
 		}
 		/// <summary>
 		/// Method Delete is used for Deleting user that exist in database
