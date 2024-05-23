@@ -17,7 +17,8 @@ namespace ReserveIO
 			builder_config.AddJsonFile("appsettings.json");//установка файла конфигурации
 			var config = builder_config.Build();
 			//string con = "Server=(localdb)\\mssqllocaldb;Database=usersdbstore;Trusted_Connection=True;";
-			var connectionString = config.GetConnectionString("MSSqlDB");
+			//var connectionStringMS = config.GetConnectionString("MSSqlDB");
+			var connectionStringPG = config.GetConnectionString("PGDB");
 			//-----------------------------------------------------------------------//
 
 
@@ -39,7 +40,8 @@ namespace ReserveIO
 				var xmlPath = Path.Combine(basePath, "ReserveIO.xml");
 				options.IncludeXmlComments(xmlPath);
 			});
-					builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(connectionString));//задаём контекст приложению
+			//builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(connectionString));//задаём контекст приложения
+			builder.Services.AddDbContext<UsersContext>(options => options.UseNpgsql(connectionStringPG));//задаём контекст приложения
 
 			var app = builder.Build();
 

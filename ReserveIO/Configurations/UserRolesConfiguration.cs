@@ -19,7 +19,7 @@ namespace ReserveIO.Configurations
 					//new() { UserId = 4, RoleId = 3 }
 				});*/
 			builder
-			.HasKey(k => new { k.UserId, k.RoleId });
+			.HasKey(k => k.UserRoleId);
 			builder
 			.HasOne<Role>()
 			.WithMany()

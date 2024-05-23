@@ -42,7 +42,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<User>> Get(int id, CancellationToken cancellationToken)
 		{
-			User user = await usersContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+			User user = await usersContext.Users.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 			if (user == null)
 				return NotFound();
 			return new ObjectResult(user);
@@ -84,7 +84,7 @@ namespace ReserveIO.Controllers
 			{
 				return BadRequest();
 			}
-			if (!usersContext.Users.Any(x => x.Id == user.Id))
+			if (!usersContext.Users.Any(x => x.UserId == user.UserId))
 			{
 				return NotFound();
 			}
@@ -105,7 +105,7 @@ namespace ReserveIO.Controllers
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<User>> Delete(int id, CancellationToken cancellationToken)
 		{
-			User user = await usersContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+			User user = await usersContext.Users.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 			if (user == null)
 				return NotFound("Такого пользователя нет");
 			user.Delete = true;//проставляем состояние удаления

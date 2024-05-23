@@ -9,7 +9,7 @@ namespace ReserveIO.Configurations
 	{
 		public void Configure(EntityTypeBuilder<User> builder)
 		{
-			builder.HasKey(x => x.Id);
+			builder.HasKey(x => x.UserId);
 /*			builder.HasData(
 				new User[]
 				{
@@ -25,9 +25,9 @@ namespace ReserveIO.Configurations
 			builder.HasMany<UserRole>()
 			.WithOne()
 			.OnDelete(DeleteBehavior.ClientNoAction);
-			builder.HasMany<Service>()
+/*			builder.HasMany<Service>()
 			.WithOne()
-			.OnDelete(DeleteBehavior.ClientNoAction);//стандартное поведение
+			.OnDelete(DeleteBehavior.ClientNoAction);//стандартное поведение*/
 			builder.HasMany<SummaryTable>()
 			.WithOne()
 			.OnDelete(DeleteBehavior.ClientNoAction);//нельзя удалять инфу о заказах

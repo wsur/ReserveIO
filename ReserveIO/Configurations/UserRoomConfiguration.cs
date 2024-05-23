@@ -16,7 +16,7 @@ namespace ReserveIO.Configurations
 					new() { UserId = 3, RoomId = 2 },
 					new() { UserId = 4, RoomId = 3 }
 				});*/
-			builder.HasKey(x => new { x.UserId, x.RoomId});
+			builder.HasKey(x => x.UserRoomId );
 			builder.HasOne<User>()
 			.WithMany()
 			.HasForeignKey(x => x.UserId);
