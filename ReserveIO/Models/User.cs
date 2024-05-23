@@ -11,8 +11,7 @@ namespace ReserveIO.Models
 		/// <summary>
 		/// ID пользователя
 		/// </summary>
-		[Required(ErrorMessage ="В методе POST уберите строку Id или оставьте равной 0")]
-		public int Id { get; set; }
+		public int UserId { get; set; }
 
 		/// <summary>
 		/// Имя пользователя

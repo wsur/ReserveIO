@@ -4,6 +4,9 @@ using ReserveIO.Models;
 
 namespace ReserveIO.Configurations
 {
+	/// <summary>
+	/// Конфигурация для сущности CostHour
+	/// </summary>
 	public class CostHourConfiguration : IEntityTypeConfiguration<CostHour>
 	{
 		public void Configure(EntityTypeBuilder<CostHour> builder)

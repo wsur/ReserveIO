@@ -14,10 +14,10 @@ namespace ReserveIO.Controllers
 			usersContext = context;
 		}
 		/// <summary>
-		/// Methon get is used for getting all elements from database
+		/// Возвращает все стоймости бронирования всех комнат с бд
 		/// </summary>
-		/// <param name="cancellationToken">There is cancellation token</param>
-		/// <returns>All <see cref="T:ReserveIO.Models.CostHour"/> from the database</returns>
+		/// <param name="cancellationToken">токен отмены</param>
+		/// <returns>Возвращает <see cref="T:ReserveIO.Models.CostHour"/> Из БД</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
@@ -28,10 +28,10 @@ namespace ReserveIO.Controllers
 		}
 
 		/// <summary>
-		/// Methon get is used for getting element with exact id
+		/// Возвращает стоймость брониирования с определённым ID
 		/// </summary>
-		/// <param name="cancellationToken">There is cancellation token</param>
-		/// <returns><see cref="T:ReserveIO.Models.CostHour"/>with exact id from the database </returns>
+		/// <param name="cancellationToken">токен отмены</param>
+		/// <returns>Запись <see cref="T:ReserveIO.Models.CostHour"/>c определённым id </returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
@@ -44,10 +44,10 @@ namespace ReserveIO.Controllers
 			return new ObjectResult(costHour);
 		}
 		/// <summary>
-		/// Method POST is used for add brand-new user to database without writing an user id
+		/// Внесение новой записи о стоймости бронирования
 		/// </summary>
-		/// <param name="costHour">Input CostHour</param>
-		/// <param name="cancellationToken">There is cancellation token</param>
+		/// <param name="costHour">Запись о стоймости бронирования</param>
+		/// <param name="cancellationToken">токен отмены</param>
 		/// <returns><see cref="T:ReserveIO.Models.CostHour"/></returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
@@ -57,7 +57,7 @@ namespace ReserveIO.Controllers
 		{
 			if (costHour == null)
 			{
-				return BadRequest();
+				return BadRequest("Введите данные");
 			}
 
 			usersContext.CostHours.Add(costHour);
