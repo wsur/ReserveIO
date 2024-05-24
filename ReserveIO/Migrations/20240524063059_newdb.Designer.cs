@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReserveIO.Models;
@@ -11,9 +12,11 @@ using ReserveIO.Models;
 namespace ReserveIO.Migrations
 {
     [DbContext(typeof(UsersContext))]
-    partial class UsersContextModelSnapshot : ModelSnapshot
+    [Migration("20240524063059_newdb")]
+    partial class newdb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,9 +133,14 @@ namespace ReserveIO.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("SummaryTableSummaryId")
+                        .HasColumnType("integer");
+
                     b.HasKey("ServiceId", "ReserveId");
 
                     b.HasIndex("ReserveId");
+
+                    b.HasIndex("SummaryTableSummaryId");
 
                     b.ToTable("ServiceInfos");
                 });
@@ -293,6 +301,10 @@ namespace ReserveIO.Migrations
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
+
+                    b.HasOne("ReserveIO.Models.SummaryTable", null)
+                        .WithMany()
+                        .HasForeignKey("SummaryTableSummaryId");
                 });
 
             modelBuilder.Entity("ReserveIO.Models.SummaryTable", b =>

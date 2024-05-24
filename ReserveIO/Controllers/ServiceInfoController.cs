@@ -81,7 +81,7 @@ namespace ReserveIO.Controllers
 		public async Task<ActionResult<ServiceInfo>> Put(int serviceId, int reserveId, int serviceIdNew, int reserveIdNew, CancellationToken cancellationToken)
 		{
 			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<ServiceInfo> result = null;
-			ServiceInfo s1 = new ServiceInfo { Id = 0 };//стандартная заглушка
+			ServiceInfo s1 = new (){ Id = 0 };//стандартная заглушка
 														  //Необходимо сначала узнать id объекта -- получить его из бд.
 			var userRoomMany = usersContext.ServiceInfos.Where(u =>
 			EF.Functions.Like(u.ServiceId.ToString(), serviceId.ToString())

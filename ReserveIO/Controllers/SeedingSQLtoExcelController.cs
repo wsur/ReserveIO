@@ -1,8 +1,13 @@
-﻿using ClosedXML.Excel;
+﻿using ClosedXML;
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Irony.Ast;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using ReserveIO.Models;
+using System.Reflection;
 
 namespace ReserveIO.Controllers
 {
@@ -16,6 +21,68 @@ namespace ReserveIO.Controllers
 			usersContext = context;
 		}
 
+		private Task CheckSetAsync(UsersContext dbContext, Type? type)
+		{
+			var method = type.GetMethods();
+			ConstructorInfo ci = type.GetConstructor(Type.EmptyTypes);
+			object f = ci.Invoke(new object[] { });
+			//var k = f.GetType();
+			//var y1 = usersContext.Entry(f).State;
+			//var keyName = usersContext.Model.FindEntityType(type).FindPrimaryKey().Properties.Select(x => x.Name).Single();
+			//var y3 = type.GetProperty(keyName).GetValue(type);
+			var dbSets = usersContext
+				.GetType()
+				.GetProperties()
+				.Where(pi => pi.PropertyType.IsGenericType &&
+							   pi.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))
+				.ToList();
+/*			foreach(var dbSet in dbSets)
+			{
+				
+            }*/
+/*			var dbSets = typeof(usersContext).GetProperties(BindingFlags.Public |
+											   BindingFlags.Instance);
+			dbSets.Where(pi => pi.PropertyType.IsGenericType &&
+							   pi.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))
+			.ToList();*/
+/*				  .ForEach(pi => ExtensionClass.Clear((dynamic)pi.GetValue(currentContext,
+																		   null)));*/
+			//var y5 = usersContext.Entry(y2).State;
+			//var y = usersContext.Entry(f).GetDatabaseValues();
+			//int i = 1;
+			/*	foreach (var l in k.GetRuntimeMethods())
+				{
+					if (i % 2 == 0)
+					{
+						i++;
+						continue;
+					}
+					var d = l.Invoke(f, new object[] { });
+					i++;
+				}*/
+			/*			var method1 = type
+							.GetRuntimeMethods().FirstOrDefault();
+						var g = method1.ToString();
+						//var t = method1.Invoke(dbContext, null);
+						var s = method1.ToString();
+						var entity1 = type.GetProperties();
+						foreach (var item in entity1)
+						{
+							var na = item.Name;
+						}
+						var entity2 = type.GetRuntimeFields();
+						var entity3 = type.Name;*/
+			/*			var method = typeof(UsersContext)
+							.GetMethod(nameof(UsersContext.Set), BindingFlags.Public | BindingFlags.Instance)
+							.MakeGenericMethod(type);
+
+						var query = method.Invoke(dbContext, null) as IQueryable<object>;
+
+						Func<Task> action = () => query.AsNoTracking().FirstOrDefaultAsync();*/
+
+			return null ;
+		}
+
 		/// <summary>
 		/// Получаем данные и сохраняем их в excel файл
 		/// </summary>
@@ -24,6 +91,16 @@ namespace ReserveIO.Controllers
 		[HttpPost("[action]")]
 		public async Task<ActionResult> Get(CancellationToken cancellationToken)
 		{
+			var types = usersContext.Model.GetEntityTypes()
+				.Select(x => x.ClrType);
+            foreach (var item in types)
+            {
+				//var it = item.Attributes;
+				var y = CheckSetAsync(usersContext, item);
+
+
+			}
+
 			var workbook = new XLWorkbook();
 			int index = 1;
 			var worksheet = workbook.Worksheets.Add("CostHour");//имя сущности в виде имени листа excel

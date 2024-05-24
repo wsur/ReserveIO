@@ -23,8 +23,6 @@ namespace ReserveIO.Configurations
 			builder.HasOne<Room>()
 			.WithMany()
 			.HasForeignKey(x => x.RoomId);
-			builder.HasMany<ServiceInfo>()
-			.WithOne();
 
 		}
 	}
