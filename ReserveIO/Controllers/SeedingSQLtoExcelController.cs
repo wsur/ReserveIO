@@ -1,6 +1,7 @@
 ﻿using ClosedXML;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Irony.Ast;
 using Microsoft.AspNetCore.Mvc;
@@ -91,20 +92,60 @@ namespace ReserveIO.Controllers
 		[HttpPost("[action]")]
 		public async Task<ActionResult> Get(CancellationToken cancellationToken)
 		{
-			var types = usersContext.Model.GetEntityTypes()
-				.Select(x => x.ClrType);
-            foreach (var item in types)
-            {
-				//var it = item.Attributes;
-				var y = CheckSetAsync(usersContext, item);
+			/*			var workbook = new XLWorkbook();
+						int ind = 0;
+						var types = usersContext.Model.GetEntityTypes()
+							.Select(x => x.ClrType);
+						var count = types.Count();
+						var enumerator = types.GetEnumerator();
+						IXLWorksheet worksheet = null;
+						while (ind < count)
+						{
+							enumerator.MoveNext();
+							var item = enumerator.Current;
+							var name = item.Name;
+							var worksheet1 = workbook.Worksheets.Add(name);//имя сущности в виде имени листа excel\
+							ind++;
+							//копируем значения
+							if(ind == count)
+								worksheet = worksheet1.CopyTo(workbook, "worksheet");
+
+						}*/
+
+			/*			foreach (var item in types)
+						{
+							//var y = CheckSetAsync(usersContext, item);
+							var name = item.Name;
 
 
-			}
 
+						}*/
 			var workbook = new XLWorkbook();
+			IXLWorksheet worksheet = null;//сделано специально, т.к. таблица инициализируется во вложенном цикле.
+			var collection = usersContext.GetCollection();
+			var tableNames = usersContext.GetTableNamesCollection();
+			int collectionIndexColumn = 1;
+			int element = 0;
+            foreach (var items in collection)
+            {
+				if (items.Count() == 0)
+				{
+					worksheet = workbook.Worksheets.Add(tableNames[element]);//название листа, у которого нет сущностей
+					continue;
+				}
+				//var enumerator1 = items.GetEnumerator();
+				//enumerator1.MoveNext();
+				//var name = enumerator1.Current.GetType().Name;
+				worksheet = workbook.Worksheets.Add(tableNames[element]);//название листа
+				foreach (var it in items)
+				{
+					var properties = it.GetType().GetProperties();
+					worksheet.Cell(collectionIndexColumn, collectionIndexColumn).InsertData(properties);
+				}
+				element++;
+            }
+            /*var costHoursList = usersContext.CostHours.ToList();
 			int index = 1;
-			var worksheet = workbook.Worksheets.Add("CostHour");//имя сущности в виде имени листа excel
-			var costHoursList = usersContext.CostHours.ToList();
 			foreach (var costHour in costHoursList)
 			{
 				if(index == 1)
@@ -159,10 +200,10 @@ namespace ReserveIO.Controllers
 					worksheet.Cell("C" + index).Value = role.Delete;
 					if(index%2 == 1)
 					{
-						/*тест*/
+						*//*тест*/
 						/*worksheet.Cell("A" + index).Style.Fill.BackgroundColor = XLColor.AirForceBlue;
 						worksheet.Cell("B" + index).Style.Fill.BackgroundColor = XLColor.Almond;
-						worksheet.Cell("C" + index).Style.Fill.BackgroundColor = XLColor.Amaranth;*/
+						worksheet.Cell("C" + index).Style.Fill.BackgroundColor = XLColor.Amaranth;*//*
 						worksheet.Cell("A" + index).Style.Fill.BackgroundColor = XLColor.AirForceBlue;
 						worksheet.Cell("B" + index).Style.Fill.BackgroundColor = XLColor.AirForceBlue;
 						worksheet.Cell("C" + index).Style.Fill.BackgroundColor = XLColor.AirForceBlue;
@@ -439,7 +480,7 @@ namespace ReserveIO.Controllers
 				}
 				index++;
 			}
-			index = 1;
+			index = 1;*/
 			workbook.SaveAs("Test.xlsx");
 			return Ok();
 		}

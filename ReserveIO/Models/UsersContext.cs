@@ -39,6 +39,44 @@ namespace ReserveIO.Models
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 			base.OnModelCreating(modelBuilder);
 		}
+
+		public IEnumerable<IEnumerable<object>> GetCollection()
+		{
+			//внимательно смотрите на порядок сущностей
+			IEnumerable<IEnumerable<object>> db = new List<IEnumerable<object>>()
+			{
+				CostHours.ToList(),
+				UserRooms.ToList(),
+				ServiceInfos.ToList(),
+				UserLogPasses.ToList(),
+				Rooms.ToList(),
+				SummaryTables.ToList(),
+				Services.ToList(),
+				UserRoles.ToList(),
+				Roles.ToList(),
+				Users.ToList()
+			};
+			return db;
+		}
+
+		public List<string> GetTableNamesCollection()
+		{
+			//внимательно смотрите на порядок сущностей
+			List<string> tableNames = new List<string>()
+			{
+				CostHours.EntityType.GetTableName(),
+				UserRooms.EntityType.GetTableName(),
+				ServiceInfos.EntityType.GetTableName(),
+				UserLogPasses.EntityType.GetTableName(),
+				Rooms.EntityType.GetTableName(),
+				SummaryTables.EntityType.GetTableName(),
+				Services.EntityType.GetTableName(),
+				UserRoles.EntityType.GetTableName(),
+				Roles.EntityType.GetTableName(),
+				Users.EntityType.GetTableName()
+			};
+			return tableNames;
+		}
 	}
 /*
 	public static class Extensions
