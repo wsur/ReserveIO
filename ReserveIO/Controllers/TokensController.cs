@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Exchange.WebServices.Data;
 using Microsoft.IdentityModel.Tokens;
 using ReserveIO.Models;
@@ -18,11 +19,13 @@ namespace ReserveIO.Controllers
 
 		}
 
-		[HttpGet("login/{username}")]
-		public async Task<ActionResult<string>> GetToken(string userName)
+		[HttpGet("login")]
+		public async Task<ActionResult<string>> GetToken(string login, string password)
 		{
-
-			var claims = new List<Claim> { new Claim(ClaimTypes.Name, userName) };
+			UserLogPass? ulp = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.Login == login && x.Password == password);
+			if (ulp == null)
+				return Unauthorized("Такого пользователя нет в системе");
+			var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, login), new Claim(ClaimTypes.UserData, password) };
 			var jwt = new JwtSecurityToken(
 					issuer: AuthOptions.ISSUER,
 					audience: AuthOptions.AUDIENCE,
