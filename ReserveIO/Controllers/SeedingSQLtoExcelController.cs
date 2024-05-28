@@ -90,7 +90,7 @@ namespace ReserveIO.Controllers
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
 		[HttpPost("[action]")]
-		public async Task<ActionResult> Get(CancellationToken cancellationToken)
+		public async Task<ActionResult> Post(CancellationToken cancellationToken)
 		{
 			/*			var workbook = new XLWorkbook();
 						int ind = 0;
@@ -124,24 +124,54 @@ namespace ReserveIO.Controllers
 			IXLWorksheet worksheet = null;//сделано специально, т.к. таблица инициализируется во вложенном цикле.
 			var collection = usersContext.GetCollection();
 			var tableNames = usersContext.GetTableNamesCollection();
-			int collectionIndexColumn = 1;
+			var tablePropertyNamesCollection = usersContext.GetTablePropertyNamesCollection();
+			//int collectionIndexColumn = 1;
 			int element = 0;
             foreach (var items in collection)
             {
 				if (items.Count() == 0)
 				{
 					worksheet = workbook.Worksheets.Add(tableNames[element]);//название листа, у которого нет сущностей
-					element++;
-					continue;
+					var tableCellIndex = 1;
+					//перечисляем все свойства в данной таблице
+					foreach (var property in tablePropertyNamesCollection[element])
+					{
+						worksheet.Cell(1, tableCellIndex).Value = property.Name;
+						worksheet.Cell(1, tableCellIndex).Style.Fill.SetBackgroundColor(XLColor.Bisque);
+						tableCellIndex++;
+					}
+					element++;//переход на обработку сл элемента
+					continue;//защита от null-значений, когда коллекция пуста
 				}
-				//var enumerator1 = items.GetEnumerator();
-				//enumerator1.MoveNext();
-				//var name = enumerator1.Current.GetType().Name;
 				worksheet = workbook.Worksheets.Add(tableNames[element]);//название листа
+				var tableRowIndex = 1;
+				//отдельная запись/строка в бд
 				foreach (var it in items)
 				{
 					var properties = it.GetType().GetProperties();
-					worksheet.Cell(collectionIndexColumn, collectionIndexColumn).InsertData(properties);
+					//worksheet.Cell(collectionIndexColumn, collectionIndexColumn).InsertData(properties);
+					//сначала напишем названия свойств и их значения
+					var tableCellIndex = 1;
+					foreach(var prop in properties)
+					{
+						if (tableRowIndex == 1)
+						{
+							worksheet.Cell(tableRowIndex, tableCellIndex).Value = prop.Name;//название свойства
+							worksheet.Cell(tableRowIndex, tableCellIndex).Style.Fill.SetBackgroundColor(XLColor.Bisque);
+							worksheet.Cell(tableRowIndex+1, tableCellIndex).Value = prop.GetValue(it).ToString();//Первое значения объекта
+						}
+						else
+						{
+							worksheet.Cell(tableRowIndex+1, tableCellIndex).Value = prop.GetValue(it).ToString();
+						}
+						//покраска нечётных строк
+						if(tableRowIndex%2 == 1 && tableRowIndex!=1)
+						{
+							worksheet.Cell(tableRowIndex, tableCellIndex).Style.Fill.SetBackgroundColor(XLColor.AirForceBlue);
+						}
+						tableCellIndex++;//переход в сл. колонку
+					}
+					tableRowIndex++;
 				}
 				element++;
             }
