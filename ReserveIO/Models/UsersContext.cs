@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System.Reflection;
 
 namespace ReserveIO.Models
@@ -74,6 +75,24 @@ namespace ReserveIO.Models
 				UserRoles.EntityType.GetTableName(),
 				Roles.EntityType.GetTableName(),
 				Users.EntityType.GetTableName()
+			};
+			return tableNames;
+		}
+		public List<IEnumerable<IProperty>> GetTablePropertyNamesCollection()
+		{
+			//внимательно смотрите на порядок сущностей
+			List<IEnumerable<IProperty>> tableNames = new List<IEnumerable<IProperty>>()
+			{
+				CostHours.EntityType.GetProperties(),
+				UserRooms.EntityType.GetProperties(),
+				ServiceInfos.EntityType.GetProperties(),
+				UserLogPasses.EntityType.GetProperties(),
+				Rooms.EntityType.GetProperties(),
+				SummaryTables.EntityType.GetProperties(),
+				Services.EntityType.GetProperties(),
+				UserRoles.EntityType.GetProperties(),
+				Roles.EntityType.GetProperties(),
+				Users.EntityType.GetProperties()
 			};
 			return tableNames;
 		}
