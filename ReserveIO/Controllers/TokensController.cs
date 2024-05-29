@@ -20,21 +20,28 @@ namespace ReserveIO.Controllers
 		}
 
 		/// <summary>
-		/// Получение токена для доступа к методам API
+		/// Получение токена для доступа к методам API. Прежде чем получить токен, вы должны добавить запись в бд, привязать пользователя к роли, добавить логин и пароль отдельно по id пользователя
 		/// </summary>
-		/// <param name="roleName">Роль пользователя</param>
+		/// <param name="roleId">Id роли пользователя. Получите их через метод GET</param>
 		/// <param name="login">логин</param>
 		/// <param name="password">пароль</param>
 		/// <returns></returns>
 		[HttpGet("login")]
-		public async Task<IResult> GetToken(string roleName,
+		public async Task<IResult> GetToken(int roleId,
 									  string login,
 									  string password)
 		{
+			//Проверка на наличие таких записей в БД
 			UserLogPass? ulp = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.Login == login && x.Password == password);
 			if (ulp == null)
 				return Results.Unauthorized();
-			var claims = new List<Claim> { new Claim(ClaimTypes.Actor, roleName),new Claim(ClaimTypes.NameIdentifier, login), new Claim(ClaimTypes.UserData, password) };
+			Role? role = await usersContext.Roles.FirstOrDefaultAsync(x => x.RoleId == roleId);
+			if (role == null)
+				return Results.Unauthorized();
+			UserRole? userRole = await usersContext.UserRoles.FirstOrDefaultAsync(x => x.RoleId == role.RoleId && x.UserId == ulp.UserId);
+			if (userRole == null)
+				return Results.Unauthorized();
+			var claims = new List<Claim> { new Claim(ClaimTypes.Actor, role.RoleName),new Claim(ClaimTypes.NameIdentifier, login), new Claim(ClaimTypes.UserData, password) };
 			var jwt = new JwtSecurityToken(
 					issuer: AuthOptions.ISSUER,
 					audience: AuthOptions.AUDIENCE,

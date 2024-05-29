@@ -46,7 +46,7 @@ namespace ReserveIO.Controllers
 			return new ObjectResult(userLogPass);
 		}
 		/// <summary>
-		/// Method POST is used for add brand-new user to database without writing an user id
+		/// Добавление логина и пароля пользователю по заданному id пользователя. Нужно для авторизации.
 		/// </summary>
 		/// <param name="userLogPass">Input UserLogPass</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
