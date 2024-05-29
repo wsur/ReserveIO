@@ -20,11 +20,11 @@ namespace ReserveIO.Controllers
 		}
 
 		[HttpGet("login")]
-		public async Task<ActionResult<string>> GetToken(string login, string password)
+		public async Task<IResult> GetToken(string login, string password)
 		{
 			UserLogPass? ulp = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.Login == login && x.Password == password);
 			if (ulp == null)
-				return Unauthorized("Такого пользователя нет в системе");
+				return Results.Unauthorized();
 			var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, login), new Claim(ClaimTypes.UserData, password) };
 			var jwt = new JwtSecurityToken(
 					issuer: AuthOptions.ISSUER,
@@ -32,8 +32,13 @@ namespace ReserveIO.Controllers
 					claims: claims,
 					expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)), // время действия 2 минуты
 					signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-			return new JwtSecurityTokenHandler().WriteToken(jwt);
+			var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
+			var result = new
+			{
+				login = login,
+				access_token = encodedJWT
+			};
+			return Results.Json(result);
 		}
 	}
 }

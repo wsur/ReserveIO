@@ -65,6 +65,26 @@ namespace ReserveIO
 
 				var xmlPath = Path.Combine(basePath, "ReserveIO.xml");
 				options.IncludeXmlComments(xmlPath);
+
+				OpenApiSecurityScheme openApiSecurityScheme = new OpenApiSecurityScheme
+				{
+					Description = "JWT Authorization using the Bearer scheme. Put only JWT token in the field below.",
+					Name = "JWT Authorization",
+					In = ParameterLocation.Header,
+					Type = SecuritySchemeType.Http,
+					Scheme = "Bearer",
+					Reference = new OpenApiReference
+					{
+						Id = "Bearer",
+						Type = ReferenceType.SecurityScheme
+					}
+				};
+				options.AddSecurityDefinition(openApiSecurityScheme.Reference.Id, openApiSecurityScheme);
+				options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+				{
+					openApiSecurityScheme,
+					Array.Empty<string>()
+				} });
 			});
 			//builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(connectionString));//задаём контекст приложения
 			builder.Services.AddDbContext<UsersContext>(options => options.UseNpgsql(connectionStringPG));//задаём контекст приложения
