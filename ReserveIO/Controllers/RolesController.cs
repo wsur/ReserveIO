@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
 
@@ -54,7 +55,9 @@ namespace ReserveIO.Controllers
 		/// <returns><see cref="T:ReserveIO.Models.Role"/></returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
+		/// <response code="401">Пользователь не авторизован/нет доступа к ресурсу</response>
 		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
+		[Authorize]
 		[HttpPost("[action]")]
 		public async Task<ActionResult<Role>> Post(Role role, CancellationToken cancellationToken)
 		{
@@ -79,7 +82,9 @@ namespace ReserveIO.Controllers
 		/// <returns><see cref="T:ReserveIO.Models.Role"/> with given id from the database if succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
+		/// <response code="401">Пользователь не авторизован/нет доступа к ресурсу</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpPut("[action]")]
 		public async Task<ActionResult<Role>> Put(Role role, CancellationToken cancellationToken)
 		{
@@ -104,7 +109,9 @@ namespace ReserveIO.Controllers
 		/// <returns><see cref="M:ControllerBase.OK()"/> if operation is succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
+		/// <response code="401">Пользователь не авторизован/нет доступа к ресурсу</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<Role>> Delete(int id, CancellationToken cancellationToken)
 		{
