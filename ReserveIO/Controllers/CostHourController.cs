@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
 
@@ -24,6 +25,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<CostHour>>> Get(CancellationToken cancellationToken)
 		{
@@ -31,7 +33,7 @@ namespace ReserveIO.Controllers
 		}
 
 		/// <summary>
-		/// Возвращает стоймость брониирования с определённым ID
+		/// Возвращает стоймость бронирования с определённым ID
 		/// </summary>
 		/// <param name="id">id бронирования</param>
 		/// <param name="cancellationToken">токен отмены</param>
@@ -39,6 +41,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<CostHour>> Get(int id, CancellationToken cancellationToken)
 		{
@@ -56,6 +59,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
+		[Authorize(Roles ="Owner,Lessor")]
 		[HttpPost("[action]")]
 		public async Task<ActionResult<CostHour>> Post(CostHour costHour, CancellationToken cancellationToken)
 		{
@@ -77,6 +81,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize(Roles = "Owner,Lessor")]
 		[HttpPut("[action]")]
 		public async Task<ActionResult<CostHour>> Put(CostHour costHour, CancellationToken cancellationToken)
 		{
@@ -102,6 +107,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize(Roles ="Owner,Lessor")]
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<CostHour>> Delete(int id, CancellationToken cancellationToken)
 		{

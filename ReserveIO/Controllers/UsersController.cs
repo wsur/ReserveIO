@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
 //using ReserveIO.Repositories;
@@ -24,10 +25,16 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<User>>> Get(CancellationToken cancellationToken)
 		{
-			return await usersContext.Users.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			List<User> users =  await usersContext.Users.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			User? user = users.FirstOrDefault(x => x.UserId == 1);
+			user.Age = 99;
+			user.Name = "ФИГ ВАМ";
+			user.Delete = true;
+			return users;
 
 		}
 		/// <summary>
@@ -39,12 +46,15 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<User>> Get(int id, CancellationToken cancellationToken)
 		{
 			User? user = await usersContext.Users.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 			if (user == null)
 				return NotFound();
+			if (user.UserId == 1)
+				return BadRequest("Фиг вам!");
 			return new ObjectResult(user);
 		}
 		/// <summary>
@@ -77,6 +87,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpPut("[action]")]
 		public async Task<ActionResult<User>> Put(User user, CancellationToken cancellationToken)
 		{
@@ -102,6 +113,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<User>> Delete(int id, CancellationToken cancellationToken)
 		{

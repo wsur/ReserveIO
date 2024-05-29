@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
 
@@ -21,6 +22,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<Room>>> Get(CancellationToken cancellationToken)
 		{
@@ -36,6 +38,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("([action]/{id}")]
 		public async Task<ActionResult<Room>> Get(int id, CancellationToken cancellationToken)
 		{
@@ -45,7 +48,7 @@ namespace ReserveIO.Controllers
 			return new ObjectResult(room);
 		}
 		/// <summary>
-		/// Method POST is used for add brand-new user to database without writing an user id
+		/// Добавление новой комнаты
 		/// </summary>
 		/// <param name="room">Input Room</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
@@ -53,6 +56,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
+		[Authorize(Roles = "Owner,Lessor")]
 		[HttpPost("[action]")]
 		public async Task<ActionResult<Room>> Post(Room room, CancellationToken cancellationToken)
 		{
@@ -66,7 +70,7 @@ namespace ReserveIO.Controllers
 			return Ok(room);
 		}
 		/// <summary>
-		/// Method PUT is used for modify existing users in the database
+		/// Изменить параметры существующей комнаты
 		/// </summary>
 		/// <param name="room">Input Room</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
@@ -74,6 +78,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize(Roles = "Owner,Lessor")]
 		[HttpPut("[action]")]
 		public async Task<ActionResult<Room>> Put(Room room, CancellationToken cancellationToken)
 		{
@@ -91,7 +96,7 @@ namespace ReserveIO.Controllers
 			return Ok(room);
 		}
 		/// <summary>
-		/// Method Delete is used for Deleting user that exist in database
+		/// Удалить комнату
 		/// </summary>
 		/// <param name="id">Id for user that we want to delete from the database</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
@@ -99,6 +104,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize(Roles = "Owner,Lessor")]
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<Room>> Delete(int id, CancellationToken cancellationToken)
 		{

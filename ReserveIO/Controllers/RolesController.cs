@@ -24,6 +24,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<Role>>> Get(CancellationToken cancellationToken)
 		{
@@ -39,6 +40,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<Role>> Get(int id, CancellationToken cancellationToken)
 		{
@@ -57,6 +59,7 @@ namespace ReserveIO.Controllers
 		/// <response code="400">Ошибка API</response>
 		/// <response code="401">Пользователь не авторизован/нет доступа к ресурсу</response>
 		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
+		[Authorize(Roles = "Owner")]
 		[HttpPost("[action]")]
 		public async Task<ActionResult<Role>> Post(Role role, CancellationToken cancellationToken)
 		{
@@ -83,6 +86,7 @@ namespace ReserveIO.Controllers
 		/// <response code="400">Ошибка API</response>
 		/// <response code="401">Пользователь не авторизован/нет доступа к ресурсу</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize(Roles = "Owner")]
 		[HttpPut("[action]")]
 		public async Task<ActionResult<Role>> Put(Role role, CancellationToken cancellationToken)
 		{
@@ -109,7 +113,7 @@ namespace ReserveIO.Controllers
 		/// <response code="400">Ошибка API</response>
 		/// <response code="401">Пользователь не авторизован/нет доступа к ресурсу</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[Authorize]
+		[Authorize(Roles = "Owner")]
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<Role>> Delete(int id, CancellationToken cancellationToken)
 		{

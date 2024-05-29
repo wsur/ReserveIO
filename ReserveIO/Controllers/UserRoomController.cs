@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Exchange.WebServices.Data;
 using ReserveIO.Models;
@@ -24,6 +25,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<UserRoom>>> Get(CancellationToken cancellationToken)
 		{
@@ -39,6 +41,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<UserRoom>> Get(int id, CancellationToken cancellationToken)
 		{
@@ -56,6 +59,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (Таких ID нет, проблема с ID)</response>
+		[Authorize(Roles ="Owner,Lessor")]
 		[HttpPost("[action]")]
 		public async Task<ActionResult<UserRoom>> Post(UserRoom userRoom, CancellationToken cancellationToken)
 		{
@@ -80,6 +84,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize(Roles = "Owner,Lessor")]
 		[HttpPut("[action]")]
 		public async Task<ActionResult<UserRoom>> Put(int userId, int roomId, int userIdNew, int roomIdNew, CancellationToken cancellationToken)
 		{
@@ -125,6 +130,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize(Roles = "Owner,Lessor")]
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<UserRoom>> Delete(int userId, int roomId, CancellationToken cancellationToken)
 		{
