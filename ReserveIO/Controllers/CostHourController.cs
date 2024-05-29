@@ -4,6 +4,9 @@ using ReserveIO.Models;
 
 namespace ReserveIO.Controllers
 {
+	/// <summary>
+	/// Контроллер для таблицы CostHour
+	/// </summary>
 	[ApiController]
 	[Route("api/[controller]")]
 	public class CostHourController : ControllerBase
@@ -30,6 +33,7 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Возвращает стоймость брониирования с определённым ID
 		/// </summary>
+		/// <param name="id">id бронирования</param>
 		/// <param name="cancellationToken">токен отмены</param>
 		/// <returns>Запись <see cref="T:ReserveIO.Models.CostHour"/>c определённым id </returns>
 		/// <response code="200">Успешное выполнение</response>
@@ -38,7 +42,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<CostHour>> Get(int id, CancellationToken cancellationToken)
 		{
-			CostHour costHour = await usersContext.CostHours.FirstOrDefaultAsync(x => x.CostId == id, cancellationToken);
+			CostHour? costHour = await usersContext.CostHours.FirstOrDefaultAsync(x => x.CostId == id, cancellationToken);
 			if (costHour == null)
 				return NotFound();
 			return new ObjectResult(costHour);
@@ -65,11 +69,11 @@ namespace ReserveIO.Controllers
 			return Ok(costHour);
 		}
 		/// <summary>
-		/// Method PUT is used for modify existing users in the database
+		/// Изменение параметров стоймости по часам
 		/// </summary>
-		/// <param name="costHour">Input CostHour</param>
-		/// <param name="cancellationToken">There is cancellation token</param>
-		/// <returns><see cref="T:ReserveIO.Models.CostHour"/> with given id from the database if succeded</returns>
+		/// <param name="costHour">изменённый параметр (должно быть совпадение по ключу)</param>
+		/// <param name="cancellationToken">токен отмены</param>
+		/// <returns><see cref="T:ReserveIO.Models.CostHour"/>сущность, которая изменена</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
@@ -90,11 +94,11 @@ namespace ReserveIO.Controllers
 			return Ok(costHour);
 		}
 		/// <summary>
-		/// Method Delete is used for Deleting user that exist in database
+		/// Удаление записи стоймости по часам из бд
 		/// </summary>
-		/// <param name="id">Id for cost note that we want to delete from the database</param>
-		/// <param name="cancellationToken">There is cancellation token</param>
-		/// <returns><see cref="M:ControllerBase.OK()"/> if operation is succeded</returns>
+		/// <param name="id">Id записи</param>
+		/// <param name="cancellationToken">токен отмены</param>
+		/// <returns><see cref="M:ControllerBase.OK()"/></returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>

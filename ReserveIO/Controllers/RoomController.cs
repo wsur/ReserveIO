@@ -39,7 +39,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("([action]/{id}")]
 		public async Task<ActionResult<Room>> Get(int id, CancellationToken cancellationToken)
 		{
-			Room room = await usersContext.Rooms.FirstOrDefaultAsync(x => x.RoomId == id, cancellationToken);
+			Room? room = await usersContext.Rooms.FirstOrDefaultAsync(x => x.RoomId == id, cancellationToken);
 			if (room == null)
 				return NotFound();
 			return new ObjectResult(room);

@@ -41,7 +41,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<ServiceInfo>> Get(int id, CancellationToken cancellationToken)
 		{
-			ServiceInfo serviceInfo = await usersContext.ServiceInfos.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+			ServiceInfo? serviceInfo = await usersContext.ServiceInfos.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 			if (serviceInfo == null)
 				return NotFound();
 			return new ObjectResult(serviceInfo);
@@ -92,7 +92,6 @@ namespace ReserveIO.Controllers
 				{
 					//меняем параметры сущности
 					s1.Id = s.Id;
-					//s1.ServiceInfoId = s.ServiceInfoId;
 					s1.ServiceId = serviceIdNew;
 					s1.ReserveId = reserveIdNew;
 					//т.к. ReserveId и ServiceId являются внешними ключами, то необходимо удалить сущность и создать новую.
@@ -128,8 +127,8 @@ namespace ReserveIO.Controllers
 		{
 			//сначала нужно получить объект с нужным id
 			//получаем все объекты с данным reserveId
-			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<ServiceInfo> result = null;
-			ServiceInfo s1 = null;
+			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<ServiceInfo>? result = null;
+			ServiceInfo? s1 = null;
 			var serviceInfoMany = usersContext.ServiceInfos.Where(u =>
 			EF.Functions.Like(u.ReserveId.ToString(),reserveId.ToString())
 			);

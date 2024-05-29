@@ -4,8 +4,12 @@ using ReserveIO.Models;
 
 namespace ReserveIO.Configurations
 {
+	/// <summary>
+	/// Конфигурация для предоставляемых сервисов
+	/// </summary>
 	public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 	{
+		/// <inheritdoc/>
 		public void Configure(EntityTypeBuilder<Service> builder)
 		{
 			//на 1 сервис приходится 1 владелец. Если менять так, что на каждый сервис может быть несколько владельцев и наоборот, то лучше это делать через промежуточную таблицу

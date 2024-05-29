@@ -4,8 +4,12 @@ using ReserveIO.Models;
 
 namespace ReserveIO.Configurations
 {
+	/// <summary>
+	/// Конфигурация для таблицы, связующей арендодателей с их комнатами.
+	/// </summary>
 	public class UserRoomConfiguration : IEntityTypeConfiguration<UserRoom>
 	{
+		/// <inheritdoc/>
 		public void Configure(EntityTypeBuilder<UserRoom> builder)
 		{
 /*			builder.HasData(

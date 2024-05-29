@@ -42,7 +42,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<Role>> Get(int id, CancellationToken cancellationToken)
 		{
-			Role role = await usersContext.Roles.FirstOrDefaultAsync(x => x.RoleId == id, cancellationToken);
+			Role? role = await usersContext.Roles.FirstOrDefaultAsync(x => x.RoleId == id, cancellationToken);
 			if (role == null)
 				return NotFound();
 			return new ObjectResult(role);
@@ -115,12 +115,12 @@ namespace ReserveIO.Controllers
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<Role>> Delete(int id, CancellationToken cancellationToken)
 		{
-			Role role = await usersContext.Roles.FirstOrDefaultAsync(x => x.RoleId == id, cancellationToken);
+			Role? role = await usersContext.Roles.FirstOrDefaultAsync(x => x.RoleId == id, cancellationToken);
 			if (role == null)
 				return NotFound();
 			role.Delete = true;
 			usersContext.Update(role);
-			var r = await usersContext.SaveChangesAsync(cancellationToken);
+			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(role);
 
 		}

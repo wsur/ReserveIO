@@ -40,7 +40,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<Service>> Get(int id, CancellationToken cancellationToken)
 		{
-			Service service = await usersContext.Services.FirstOrDefaultAsync(x => x.ServiceId == id, cancellationToken);
+			Service? service = await usersContext.Services.FirstOrDefaultAsync(x => x.ServiceId == id, cancellationToken);
 			if (service == null)
 				return NotFound();
 			return new ObjectResult(service);
@@ -103,7 +103,7 @@ namespace ReserveIO.Controllers
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<Service>> Delete(int id, CancellationToken cancellationToken)
 		{
-			Service service = await usersContext.Services.FirstOrDefaultAsync(x => x.ServiceId == id, cancellationToken);
+			Service? service = await usersContext.Services.FirstOrDefaultAsync(x => x.ServiceId == id, cancellationToken);
 			if(service == null)
 				return NotFound("Такой записи нет");
 			var result = usersContext.Remove(service);

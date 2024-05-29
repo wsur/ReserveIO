@@ -4,8 +4,12 @@ using ReserveIO.Models;
 
 namespace ReserveIO.Configurations
 {
+	/// <summary>
+	/// Конфигурация для ролей
+	/// </summary>
 	public class RoleConfiguration : IEntityTypeConfiguration<Role>
 	{
+		/// <inheritdoc/>
 		public void Configure(EntityTypeBuilder<Role> builder)
 		{
 			builder.HasKey(x => x.RoleId);

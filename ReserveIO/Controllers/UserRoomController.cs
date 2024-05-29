@@ -42,7 +42,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<UserRoom>> Get(int id, CancellationToken cancellationToken)
 		{
-			UserRoom userRoom = await usersContext.UserRooms.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+			UserRoom? userRoom = await usersContext.UserRooms.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 			if (userRoom == null)
 				return NotFound();
 			return new ObjectResult(userRoom);
@@ -75,7 +75,6 @@ namespace ReserveIO.Controllers
 		/// <param name="roomId">Id комнаты в БД</param>
 		/// <param name="userIdNew">Новый Id пользователя</param>
 		/// <param name="roomIdNew">Новый Id комнаты</param>
-		/// <param name="userRoom">Новая сущность</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserRoom"/> with given id from the database if succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
@@ -84,7 +83,7 @@ namespace ReserveIO.Controllers
 		[HttpPut("[action]")]
 		public async Task<ActionResult<UserRoom>> Put(int userId, int roomId, int userIdNew, int roomIdNew, CancellationToken cancellationToken)
 		{
-			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRoom> result = null;
+			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRoom>? result = null;
 			UserRoom s1 = new UserRoom { UserRoomId = 0};//стандартная заглушка
 			//Необходимо сначала узнать id объекта -- получить его из бд.
 			var userRoomMany = usersContext.UserRooms.Where(u =>
@@ -96,7 +95,6 @@ namespace ReserveIO.Controllers
 				{
 					//меняем параметры сущности
 					s1.UserRoomId = s.UserRoomId;
-					//s1.UserRoomId = s.UserRoomId;
 					s1.RoomId = roomIdNew;
 					s1.UserId = userIdNew;
 					//т.к. roomId и userId являются внешними ключами, то необходимо удалить сущность и создать новую.
@@ -130,8 +128,8 @@ namespace ReserveIO.Controllers
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<UserRoom>> Delete(int userId, int roomId, CancellationToken cancellationToken)
 		{
-			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRoom> result = null;
-			UserRoom s1 = null;
+			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRoom>? result = null;
+			UserRoom? s1 = null;
 			
 			var userRoomMany = usersContext.UserRooms.Where(u =>
 			EF.Functions.Like(u.UserId.ToString(), userId.ToString())

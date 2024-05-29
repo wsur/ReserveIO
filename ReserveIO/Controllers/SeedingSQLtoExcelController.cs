@@ -37,11 +37,10 @@ namespace ReserveIO.Controllers
 			var collection = usersContext.GetCollection();
 			var tableNames = usersContext.GetTableNamesCollection();
 			var tablePropertyNamesCollection = usersContext.GetTablePropertyNamesCollection();
-			//int collectionIndexColumn = 1;
 			int element = 0;
-            foreach (var items in collection)
-            {
-				if (items.Count() == 0)
+			foreach (var items in collection)
+			{
+				if (!items.Any())
 				{
 					worksheet = workbook.Worksheets.Add(tableNames[element]);//название листа, у которого нет сущностей
 					var tableCellIndex = 1;
@@ -63,20 +62,20 @@ namespace ReserveIO.Controllers
 					var properties = it.GetType().GetProperties();
 					//сначала напишем названия свойств и их значения
 					var tableCellIndex = 1;
-					foreach(var prop in properties)
+					foreach (var prop in properties)
 					{
 						if (tableRowIndex == 1)
 						{
 							worksheet.Cell(tableRowIndex, tableCellIndex).Value = prop.Name;//название свойства
 							worksheet.Cell(tableRowIndex, tableCellIndex).Style.Fill.SetBackgroundColor(XLColor.Bisque);
-							worksheet.Cell(tableRowIndex+1, tableCellIndex).Value = prop.GetValue(it).ToString();//Первое значения объекта
+							worksheet.Cell(tableRowIndex + 1, tableCellIndex).Value = prop.GetValue(it)?.ToString();//Первое значения объекта
 						}
 						else
 						{
-							worksheet.Cell(tableRowIndex+1, tableCellIndex).Value = prop.GetValue(it).ToString();
+							worksheet.Cell(tableRowIndex + 1, tableCellIndex).Value = prop.GetValue(it)?.ToString();
 						}
 						//покраска нечётных строк
-						if(tableRowIndex%2 == 1 && tableRowIndex!=1)
+						if (tableRowIndex % 2 == 1 && tableRowIndex != 1)
 						{
 							worksheet.Cell(tableRowIndex, tableCellIndex).Style.Fill.SetBackgroundColor(XLColor.AirForceBlue);
 						}
@@ -85,8 +84,8 @@ namespace ReserveIO.Controllers
 					tableRowIndex++;
 				}
 				element++;
-            }
-			
+			}
+
 			using (var stream = new MemoryStream())
 			{
 				workbook.SaveAs(stream);
