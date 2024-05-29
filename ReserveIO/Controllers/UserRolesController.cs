@@ -45,7 +45,7 @@ namespace ReserveIO.Controllers
 		return new ObjectResult(userRole);
 	}
 		/// <summary>
-		/// Method POST is used for add brand-new userRole to database without writing an userRole id
+		/// Добавление роли пользователю. Доступ есть без авторизации.
 		/// </summary>
 		/// <param name="userRole">Input UserRole</param>
 		/// <param name="cancellationToken">There is cancellation token</param>

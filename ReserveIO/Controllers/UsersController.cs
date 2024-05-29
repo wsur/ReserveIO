@@ -48,7 +48,7 @@ namespace ReserveIO.Controllers
 			return new ObjectResult(user);
 		}
 		/// <summary>
-		/// Method POST is used for add brand-new user to database without writing an user id
+		/// Добавление пользователя в бд. Доступ есть без авторизации
 		/// </summary>
 		/// <param name="user">Input user</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
