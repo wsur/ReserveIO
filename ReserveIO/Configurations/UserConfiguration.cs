@@ -5,8 +5,12 @@ using System.Reflection.Emit;
 
 namespace ReserveIO.Configurations
 {
+	/// <summary>
+	/// Конфигурация для пользователей
+	/// </summary>
 	public class UserConfiguration : IEntityTypeConfiguration<User>
 	{
+		/// <inheritdoc/>
 		public void Configure(EntityTypeBuilder<User> builder)
 		{
 			builder.HasKey(x => x.UserId);

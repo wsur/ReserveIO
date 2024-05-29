@@ -9,6 +9,7 @@ namespace ReserveIO.Configurations
 	/// </summary>
 	public class CostHourConfiguration : IEntityTypeConfiguration<CostHour>
 	{
+		/// <inheritdoc/>
 		public void Configure(EntityTypeBuilder<CostHour> builder)
 		{
 			builder.HasKey(x => x.CostId);

@@ -4,8 +4,12 @@ using ReserveIO.Models;
 
 namespace ReserveIO.Configurations
 {
+	/// <summary>
+	/// Конфигурация таблицы заказов
+	/// </summary>
 	public class SummaryTableConfiguration : IEntityTypeConfiguration<SummaryTable>
 	{
+		/// <inheritdoc/>
 		public void Configure(EntityTypeBuilder<SummaryTable> builder)
 		{
 /*			builder.HasData(

@@ -39,7 +39,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("[action]/{id}")]
 	public async Task<ActionResult<UserRole>> Get(int id, CancellationToken cancellationToken)
 	{
-		UserRole userRole = await usersContext.UserRoles.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+		UserRole? userRole = await usersContext.UserRoles.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 		if (userRole == null)
 			return NotFound();
 		return new ObjectResult(userRole);
@@ -68,6 +68,10 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Method PUT is used for modify existing users in the database
 		/// </summary>
+		/// <param name="userId">id пользователя</param>
+		/// <param name="roleId">id роли</param>
+		/// <param name="userIdNew">новый id пользователя</param>
+		/// <param name="roleIdNew">новый id роли</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.UserRoles"/> with given id from the database if succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
@@ -76,7 +80,7 @@ namespace ReserveIO.Controllers
 		[HttpPut("[action]")]
 	public async Task<ActionResult<UserRole>> Put(int userId, int roleId, int userIdNew, int roleIdNew, CancellationToken cancellationToken)
 	{
-			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRole> result = null;
+			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRole>? result = null;
 			UserRole s1 = new UserRole { UserId = 0 };//стандартная заглушка
 														//Необходимо сначала узнать id объекта -- получить его из бд.
 			var userRoomMany = usersContext.UserRoles.Where(u =>
@@ -88,7 +92,6 @@ namespace ReserveIO.Controllers
 				{
 					//меняем параметры сущности
 					s1.UserRoleId = s.UserRoleId;
-					//s1.UserRoleId = s.UserRoleId;
 					s1.UserId = userIdNew;
 					s1.RoleId = roleIdNew;
 					//т.к. ReserveId и ServiceId являются внешними ключами, то необходимо удалить сущность и создать новую.
@@ -108,7 +111,8 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Method Delete is used for Deleting userRole that exist in database
 		/// </summary>
-		/// <param name="id">Id for userRole that we want to delete from the database</param>
+		/// <param name="userId">id пользователя</param>
+		/// <param name="roleId">id роли пользователя</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="M:ControllerBase.OK()"/> if operation is succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
@@ -117,12 +121,12 @@ namespace ReserveIO.Controllers
 		[HttpDelete("[action]")]
 	public async Task<ActionResult<UserRole>> Delete(int userId, int roleId, CancellationToken cancellationToken)
 	{
-			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRole> result = null;
-			UserRole s1 = null;
+			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRole>? result = null;
+			UserRole? s1 = null;
 			var userRoleMany = usersContext.UserRoles.Where(u =>
 			EF.Functions.Like(u.UserId.ToString(), userId.ToString())
 			);
-			foreach (UserRole s in userRoleMany)
+			foreach (UserRole? s in userRoleMany)
 			{
 				if (s.RoleId == roleId)
 				{

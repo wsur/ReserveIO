@@ -40,7 +40,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<UserLogPass>> Get(int id, CancellationToken cancellationToken)
 		{
-			UserLogPass userLogPass = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+			UserLogPass? userLogPass = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 			if (userLogPass == null)
 				return NotFound();
 			return new ObjectResult(userLogPass);
@@ -104,7 +104,7 @@ namespace ReserveIO.Controllers
 		public async Task<ActionResult<UserLogPass>> Delete(int id, CancellationToken cancellationToken)
 		{
 			//UserLogPass userLogPass = new UserLogPass { UserId = id };//создание объекта-заглушки
-			UserLogPass userLogPass = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+			UserLogPass? userLogPass = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 			if (userLogPass == null)
 				return NotFound("Логин и пароль с данным id не был найден");
 			var result = usersContext.Remove(userLogPass);

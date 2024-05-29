@@ -6,8 +6,12 @@ using System.Reflection.Metadata;
 using ReserveIO.Models;
 namespace ReserveIO.Configurations
 {
+	/// <summary>
+	/// Конфигурация таблицы, связующей пользователей с ролями.
+	/// </summary>
 	public class UserRolesConfiguration : IEntityTypeConfiguration<UserRole>
 	{
+		/// <inheritdoc/>
 		public void Configure(EntityTypeBuilder<UserRole> builder)
 		{
 /*			builder.HasData(

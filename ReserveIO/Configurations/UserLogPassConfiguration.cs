@@ -4,8 +4,12 @@ using ReserveIO.Models;
 
 namespace ReserveIO.Configurations
 {
+	/// <summary>
+	/// Конфигурация для логинов и паролей пользователей
+	/// </summary>
 	public class UserLogPassConfiguration : IEntityTypeConfiguration<UserLogPass>
 	{
+		/// <inheritdoc/>
 		public void Configure(EntityTypeBuilder<UserLogPass> builder)
 		{
 /*			builder.HasData(

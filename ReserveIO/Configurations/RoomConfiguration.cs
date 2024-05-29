@@ -3,8 +3,12 @@ using ReserveIO.Models;
 
 namespace ReserveIO.Configurations
 {
+	/// <summary>
+	/// Конфигурация для помещений
+	/// </summary>
 	public class RoomConfiguration : IEntityTypeConfiguration<Room>
 	{
+		/// <inheritdoc/>
 		public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Room> builder)
 		{
 /*			builder.HasData(

@@ -40,7 +40,7 @@ namespace ReserveIO.Controllers
 		[HttpGet("[action]/{id}")]
 			public async Task<ActionResult<SummaryTable>> Get(int id, CancellationToken cancellationToken)
 			{
-				SummaryTable summaryTable = await usersContext.SummaryTables.FirstOrDefaultAsync(x => x.SummaryId == id, cancellationToken);
+				SummaryTable? summaryTable = await usersContext.SummaryTables.FirstOrDefaultAsync(x => x.SummaryId == id, cancellationToken);
 				if (summaryTable == null)
 					return NotFound();
 				return new ObjectResult(summaryTable);
@@ -103,7 +103,7 @@ namespace ReserveIO.Controllers
 		[HttpDelete("[action]")]
 			public async Task<ActionResult<SummaryTable>> Delete(int id, CancellationToken cancellationToken)
 			{
-				SummaryTable summaryTable = await usersContext.SummaryTables.FirstOrDefaultAsync(x => x.SummaryId == id, cancellationToken);
+				SummaryTable? summaryTable = await usersContext.SummaryTables.FirstOrDefaultAsync(x => x.SummaryId == id, cancellationToken);
 				if (summaryTable == null)
 					return NotFound("Такой записи нет");
 				var result = usersContext.Remove(summaryTable);

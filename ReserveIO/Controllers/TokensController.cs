@@ -19,13 +19,22 @@ namespace ReserveIO.Controllers
 
 		}
 
+		/// <summary>
+		/// Получение токена для доступа к методам API
+		/// </summary>
+		/// <param name="roleName">Роль пользователя</param>
+		/// <param name="login">логин</param>
+		/// <param name="password">пароль</param>
+		/// <returns></returns>
 		[HttpGet("login")]
-		public async Task<IResult> GetToken(string login, string password)
+		public async Task<IResult> GetToken(string roleName,
+									  string login,
+									  string password)
 		{
 			UserLogPass? ulp = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.Login == login && x.Password == password);
 			if (ulp == null)
 				return Results.Unauthorized();
-			var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, login), new Claim(ClaimTypes.UserData, password) };
+			var claims = new List<Claim> { new Claim(ClaimTypes.Actor, roleName),new Claim(ClaimTypes.NameIdentifier, login), new Claim(ClaimTypes.UserData, password) };
 			var jwt = new JwtSecurityToken(
 					issuer: AuthOptions.ISSUER,
 					audience: AuthOptions.AUDIENCE,
@@ -36,6 +45,7 @@ namespace ReserveIO.Controllers
 			var result = new
 			{
 				login = login,
+				password = password,
 				access_token = encodedJWT
 			};
 			return Results.Json(result);

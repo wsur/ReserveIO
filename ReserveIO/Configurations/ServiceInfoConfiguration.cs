@@ -4,9 +4,12 @@ using ReserveIO.Models;
 
 namespace ReserveIO.Configurations
 {
+	/// <summary>
+	/// Конфигурация для сущности, связывающей Сервисы и таблицу с заказами
+	/// </summary>
 	public class ServiceInfoConfiguration : IEntityTypeConfiguration<ServiceInfo>
 	{
-
+	/// <inheritdoc/>
 	public void Configure(EntityTypeBuilder<ServiceInfo> builder)
 		{
 /*			builder.HasData(
