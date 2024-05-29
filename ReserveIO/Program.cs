@@ -17,12 +17,18 @@ namespace ReserveIO
 
 			//----------Переменные конфигурации appsettings.json----------------------//
 			var builder_config = new ConfigurationBuilder();
+			IConfiguration configuration = new ConfigurationBuilder()
+				.SetBasePath(Directory.GetCurrentDirectory())
+				.AddJsonFile("appSettings.json", false)
+				.Build();
+			builder.Services.AddSingleton<IConfiguration>(configuration);
 			builder_config.SetBasePath(Directory.GetCurrentDirectory());
 			builder_config.AddJsonFile("appsettings.json");//установка файла конфигурации
 			var config = builder_config.Build();
 			//string con = "Server=(localdb)\\mssqllocaldb;Database=usersdbstore;Trusted_Connection=True;";
 			//var connectionStringMS = config.GetConnectionString("MSSqlDB");
-			var connectionStringPG = config.GetConnectionString("PGDB");
+			var connectionStringPG = configuration.GetConnectionString("PGDB");
+			//var tokenLifeTime = configuration.GetConnectionString("TokeLifeTime");
 			//-----------------------------------------------------------------------//
 
 			//добавление сервиса аутентификации

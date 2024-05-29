@@ -13,10 +13,12 @@ namespace ReserveIO.Controllers
 	public class TokensController : ControllerBase
 	{
 		readonly UsersContext usersContext;
-		public TokensController(UsersContext context)
+		private IConfiguration Configuration;
+
+		public TokensController(UsersContext context, IConfiguration configuration)
 		{
 			usersContext = context;
-
+			Configuration = configuration;
 		}
 
 		/// <summary>
@@ -41,12 +43,15 @@ namespace ReserveIO.Controllers
 			UserRole? userRole = await usersContext.UserRoles.FirstOrDefaultAsync(x => x.RoleId == role.RoleId && x.UserId == ulp.UserId);
 			if (userRole == null)
 				return Results.Unauthorized();
+			if (String.IsNullOrEmpty(Configuration["TokenLifeTime"]))
+				return Results.Unauthorized();
+			double time = Convert.ToDouble(Configuration["TokenLifeTime"]);
 			var claims = new List<Claim> { new Claim(ClaimTypes.Actor, role.RoleName),new Claim(ClaimTypes.NameIdentifier, login), new Claim(ClaimTypes.UserData, password) };
 			var jwt = new JwtSecurityToken(
 					issuer: AuthOptions.ISSUER,
 					audience: AuthOptions.AUDIENCE,
 					claims: claims,
-					expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)), // время действия 2 минуты
+					expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(time)), // время действия 2 минуты
 					signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 			var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
 			var result = new
