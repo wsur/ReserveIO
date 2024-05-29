@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
 
@@ -22,10 +23,17 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<UserLogPass>>> Get(CancellationToken cancellationToken)
 		{
-			return await usersContext.UserLogPasses.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+
+			List<UserLogPass> usls = await usersContext.UserLogPasses.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			var usl = usls.First(x => x.UserId == 1);
+			//подмена перед отправкой
+			usl.Login = "aaaaa";
+			usl.Password = "bbbbb";
+			return usls;
 		}
 
 		/// <summary>
@@ -37,10 +45,13 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<UserLogPass>> Get(int id, CancellationToken cancellationToken)
 		{
 			UserLogPass? userLogPass = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+			if (userLogPass.UserId == 1)
+				return BadRequest("Фиг вам!");
 			if (userLogPass == null)
 				return NotFound();
 			return new ObjectResult(userLogPass);
@@ -54,6 +65,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
+		[Authorize]
 		[HttpPost("[action]")]
 		public async Task<ActionResult<UserLogPass>> Post(UserLogPass userLogPass, CancellationToken cancellationToken)
 		{
@@ -61,7 +73,8 @@ namespace ReserveIO.Controllers
 			{
 				return BadRequest();
 			}
-
+			if (userLogPass.UserId == 1)
+				return BadRequest("Фиг вам!");
 			usersContext.UserLogPasses.Add(userLogPass);
 			await usersContext.SaveChangesAsync(cancellationToken);
 			return Ok(userLogPass);
@@ -75,6 +88,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpPut("[action]")]
 		public async Task<ActionResult<UserLogPass>> Put(UserLogPass userLogPass, CancellationToken cancellationToken)
 		{
@@ -86,6 +100,8 @@ namespace ReserveIO.Controllers
 			{
 				return NotFound();
 			}
+			if (userLogPass.UserId == 1)
+				return BadRequest("Фиг вам!");
 
 			usersContext.Update(userLogPass);
 			await usersContext.SaveChangesAsync(cancellationToken);
@@ -100,11 +116,14 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<UserLogPass>> Delete(int id, CancellationToken cancellationToken)
 		{
 			//UserLogPass userLogPass = new UserLogPass { UserId = id };//создание объекта-заглушки
 			UserLogPass? userLogPass = await usersContext.UserLogPasses.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+			if (id == 1)
+				return BadRequest("Фиг вам!");
 			if (userLogPass == null)
 				return NotFound("Логин и пароль с данным id не был найден");
 			var result = usersContext.Remove(userLogPass);

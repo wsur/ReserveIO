@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Exchange.WebServices.Data;
 using ReserveIO.Models;
@@ -23,6 +24,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<ServiceInfo>>> Get(CancellationToken cancellationToken)
 		{
@@ -38,6 +40,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<ServiceInfo>> Get(int id, CancellationToken cancellationToken)
 		{
@@ -55,6 +58,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (Таких ID нет, проблема с ID сущностей, либо id записи не оставили равным 0)</response>
+		[Authorize]
 		[HttpPost("[action]")]
 		public async Task<ActionResult<ServiceInfo>> Post(ServiceInfo serviceInfo, CancellationToken cancellationToken)
 		{
@@ -77,6 +81,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpPut("[action]")]
 		public async Task<ActionResult<ServiceInfo>> Put(int serviceId, int reserveId, int serviceIdNew, int reserveIdNew, CancellationToken cancellationToken)
 		{
@@ -122,6 +127,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<ServiceInfo>> Delete(int serviceId, int reserveId, CancellationToken cancellationToken)
 		{

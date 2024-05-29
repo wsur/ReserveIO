@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Exchange.WebServices.Data;
 using ReserveIO.Models;
@@ -22,6 +23,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]")]
 	public async Task<ActionResult<IEnumerable<UserRole>>> Get(CancellationToken cancellationToken)
 	{
@@ -36,6 +38,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]/{id}")]
 	public async Task<ActionResult<UserRole>> Get(int id, CancellationToken cancellationToken)
 	{
@@ -60,7 +63,8 @@ namespace ReserveIO.Controllers
 		{
 			return BadRequest();
 		}
-
+			if (userRole.RoleId == 1)
+				return BadRequest("Нельзя привязывать такую роль пользователю");
 		usersContext.UserRoles.Add(userRole);
 		await usersContext.SaveChangesAsync(cancellationToken);
 		return Ok(userRole);
@@ -77,17 +81,20 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpPut("[action]")]
 	public async Task<ActionResult<UserRole>> Put(int userId, int roleId, int userIdNew, int roleIdNew, CancellationToken cancellationToken)
 	{
 			Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserRole>? result = null;
 			UserRole s1 = new UserRole { UserId = 0 };//стандартная заглушка
 														//Необходимо сначала узнать id объекта -- получить его из бд.
-			var userRoomMany = usersContext.UserRoles.Where(u =>
+			var userRoleMany = usersContext.UserRoles.Where(u =>
 			EF.Functions.Like(u.UserId.ToString(), userId.ToString())
 			);
-			foreach (UserRole s in userRoomMany)
+			foreach (UserRole s in userRoleMany)
 			{
+				if (s.RoleId == 1)
+					return BadRequest("Нельзя привязывать такую роль пользователю");
 				if (s.RoleId == roleId)
 				{
 					//меняем параметры сущности
@@ -118,6 +125,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpDelete("[action]")]
 	public async Task<ActionResult<UserRole>> Delete(int userId, int roleId, CancellationToken cancellationToken)
 	{
@@ -128,6 +136,8 @@ namespace ReserveIO.Controllers
 			);
 			foreach (UserRole? s in userRoleMany)
 			{
+				if (s.RoleId == 1)
+					return BadRequest("Нельзя привязывать такую роль пользователю");
 				if (s.RoleId == roleId)
 				{
 					result = usersContext.Remove(s);

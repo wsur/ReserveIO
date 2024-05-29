@@ -28,7 +28,7 @@ namespace ReserveIO.Controllers
 		/// </summary>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		[Authorize]
+		[Authorize(Roles = "Owner")]
 		[HttpGet("[action]")]
 		public async Task<IActionResult> Get(CancellationToken cancellationToken)
 		{

@@ -46,7 +46,7 @@ namespace ReserveIO.Controllers
 			if (String.IsNullOrEmpty(Configuration["TokenLifeTime"]))
 				return Results.Unauthorized();
 			double time = Convert.ToDouble(Configuration["TokenLifeTime"]);
-			var claims = new List<Claim> { new Claim(ClaimTypes.Actor, role.RoleName),new Claim(ClaimTypes.NameIdentifier, login), new Claim(ClaimTypes.UserData, password) };
+			var claims = new List<Claim> { new Claim(ClaimsIdentity.DefaultRoleClaimType, role.RoleName),new Claim(ClaimTypes.NameIdentifier, login), new Claim(ClaimTypes.UserData, password) };
 			var jwt = new JwtSecurityToken(
 					issuer: AuthOptions.ISSUER,
 					audience: AuthOptions.AUDIENCE,

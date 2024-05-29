@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
 
@@ -15,13 +16,14 @@ namespace ReserveIO.Controllers
 
 		}
 		/// <summary>
-		/// Methon get is used for getting all elements from database
+		/// Все предоставляемые услуги
 		/// </summary>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns>All <see cref="T:ReserveIO.Models.Service"/> from the database</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<Service>>> Get(CancellationToken cancellationToken)
 		{
@@ -29,7 +31,7 @@ namespace ReserveIO.Controllers
 		}
 
 		/// <summary>
-		/// Methon get is used for getting element with exact id
+		/// Получить услугу с определённым id
 		/// </summary>
 		/// <param name="id">Input Service</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
@@ -37,6 +39,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpGet("[action]/{id}")]
 		public async Task<ActionResult<Service>> Get(int id, CancellationToken cancellationToken)
 		{
@@ -46,7 +49,7 @@ namespace ReserveIO.Controllers
 			return new ObjectResult(service);
 		}
 		/// <summary>
-		/// Method POST is used for add brand-new user to database without writing an user id
+		/// Добавить новую услугу
 		/// </summary>
 		/// <param name="service">Input Service</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
@@ -54,6 +57,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
+		[Authorize]
 		[HttpPost("[action]")]
 		public async Task<ActionResult<Service>> Post(Service service, CancellationToken cancellationToken)
 		{
@@ -67,7 +71,7 @@ namespace ReserveIO.Controllers
 			return Ok(service);
 		}
 		/// <summary>
-		/// Method PUT is used for modify existing users in the database
+		/// Изменить существующую услугу
 		/// </summary>
 		/// <param name="service">Input Service</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
@@ -75,6 +79,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpPut("[action]")]
 		public async Task<ActionResult<Service>> Put(Service service, CancellationToken cancellationToken)
 		{
@@ -100,6 +105,7 @@ namespace ReserveIO.Controllers
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
+		[Authorize]
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<Service>> Delete(int id, CancellationToken cancellationToken)
 		{
