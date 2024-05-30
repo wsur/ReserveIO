@@ -28,7 +28,8 @@ namespace ReserveIO.Controllers
 		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<Role>>> Get(CancellationToken cancellationToken)
 		{
-			return await usersContext.Roles.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			var s = await usersContext.Roles.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			return s;
 		}
 
 		/// <summary>

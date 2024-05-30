@@ -1,11 +1,15 @@
 
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ReserveIO.Models;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Rewrite; // Пакет с middleware URL Rewriting
 
 namespace ReserveIO
 {
@@ -97,6 +101,17 @@ namespace ReserveIO
 
 			var app = builder.Build();
 
+			ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+			ILogger logger = loggerFactory.CreateLogger<Program>();
+
+
+			//errorHandling
+			app.Use(async (context, next) =>
+			{
+				await next.Invoke(context);
+				Console.WriteLine("Path: " + context.Request.Path);
+			});
+			app.UseExceptionHandler("/error");//обработка ошибок приложения переадресует на /error
 			app.UseAuthentication();
 			app.UseAuthorization();
 			// Configure the HTTP request pipeline.
@@ -109,10 +124,20 @@ namespace ReserveIO
 				});
 			}
 			app.UseDeveloperExceptionPage();
-
 			app.UseHttpsRedirection();
-
 			app.MapControllers();
+			// middleware, которое обрабатывает исключение
+			app.Map("/error", app => app.Run(async context =>
+			{
+				logger.LogError($"Ошибка по маршруту: {context.Request.Path.ToString()}");
+/*				// подключаем URL Rewriting
+				//подменяем неккоректный адрес на стартовую страницу приложения
+				var options = new RewriteOptions()
+							.AddRedirect("(.*)/$", "$1")
+							.AddRewrite(context.Request.Path, "/swagger/index.html", skipRemainingRules: false);*/
+			})
+
+			);
 
 			app.Run();
 		}
