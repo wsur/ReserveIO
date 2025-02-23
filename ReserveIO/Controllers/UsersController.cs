@@ -31,11 +31,10 @@ namespace ReserveIO.Controllers
 		[HttpGet("[action]")]
 		public async Task<ActionResult<IEnumerable<User>>> Get(CancellationToken cancellationToken)
 		{
-			List<User> users =  await usersContext.Users.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
+			List<User> users =  await db.Users.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 			User? user = users.FirstOrDefault(x => x.UserId == 1);
 			user.Age = 99;
 			user.Name = "ФИГ ВАМ";
-			user.Delete = true;
 			return users;
 
 		}
@@ -53,7 +52,7 @@ namespace ReserveIO.Controllers
 		public async Task<ActionResult<User>> Get(int id, CancellationToken cancellationToken)
 		{
 			User? user = await db.Users.FirstOrDefaultAsync(
-				x => x.Id == id,
+				x => x.UserId == id,
 				cancellationToken);
 			if (user == null)
 				return NotFound();
@@ -78,8 +77,8 @@ namespace ReserveIO.Controllers
 				return BadRequest();
 			}
 
-			usersContext.Users.Add(user);
-			await usersContext.SaveChangesAsync(cancellationToken);
+			db.Users.Add(user);
+			await db.SaveChangesAsync(cancellationToken);
 			return Ok(user);
 		}
 		/// <summary>
@@ -99,13 +98,13 @@ namespace ReserveIO.Controllers
 			{
 				return BadRequest();
 			}
-			if (!usersContext.Users.Any(x => x.UserId == user.UserId))
+			if (!db.Users.Any(x => x.UserId == user.UserId))
 			{
 				return NotFound();
 			}
 
-			usersContext.Update(user);
-			await usersContext.SaveChangesAsync(cancellationToken);
+			db.Update(user);
+			await db.SaveChangesAsync(cancellationToken);
 			return Ok(user);
 		}
 		/// <summary>
@@ -121,7 +120,7 @@ namespace ReserveIO.Controllers
 		[HttpDelete("[action]")]
 		public async Task<ActionResult<User>> Delete(int id, CancellationToken cancellationToken)
 		{
-			var user = new User { Id = id};//создание объекта-заглушки
+			var user = new User { UserId = id};//создание объекта-заглушки
 			var result = db.Remove(user);
 			await db.SaveChangesAsync(cancellationToken);
 			if (result != null)
