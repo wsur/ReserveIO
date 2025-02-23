@@ -4,9 +4,14 @@ using System.Reflection;
 
 namespace ReserveIO.Models
 {
-	//Промежуточный класс для сопоставления модели с базой данных
+	/// <summary>
+	/// Контекст данных пользователей
+	/// </summary>
 	public class UsersContext : DbContext
 	{
+		/// <summary>
+		/// Пользователи
+		/// </summary>
 		public DbSet<User> Users { get; set; }
 
 		public DbSet<Role> Roles { get; set; }
@@ -27,6 +32,10 @@ namespace ReserveIO.Models
 
 		public DbSet<CostHour> CostHours { get; set; }
 
+		/// <summary>
+		/// Конструктор контекста данных пользователей
+		/// </summary>
+		/// <param name="options"></param>
 		public UsersContext(DbContextOptions<UsersContext> options)
 			: base(options)
 		{
@@ -34,7 +43,10 @@ namespace ReserveIO.Models
 			//Database.EnsureCreated(); //вызов этого метода при использовании миграции вызовет ошибку
 
 		}
-
+		/// <summary>
+		/// Настройки при создании контекста данных
+		/// </summary>
+		/// <param name="modelBuilder"></param>
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
