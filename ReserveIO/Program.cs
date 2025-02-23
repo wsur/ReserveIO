@@ -5,8 +5,15 @@ using Microsoft.Extensions.Configuration;
 
 namespace ReserveIO
 {
+	/// <summary>
+	/// Основной класс программы
+	/// </summary>
 	public class Program
 	{
+		/// <summary>
+		/// Метод, с которого начинается выполнение программы
+		/// </summary>
+		/// <param name="args"></param>
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);

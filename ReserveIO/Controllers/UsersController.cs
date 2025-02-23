@@ -4,22 +4,19 @@ using ReserveIO.Models;
 
 namespace ReserveIO.Controllers
 {
+	/// <summary>
+	/// Контроллер для управления данными пользователей
+	/// </summary>
+	/// <remarks>
+	/// конструктор контроллера пользователей
+	/// </remarks>
+	/// <param name="context"></param>
 	[ApiController]
 	[Route("api/[controller]")]
-	public class UsersController : ControllerBase
+	public class UsersController(UsersContext context) : ControllerBase
 	{
-		UsersContext db;
-		public UsersController(UsersContext context)
-		{
-			db = context;
-			/*			if (!db.Users.Any())
-						{
-							db.Users.Add(new User { Name = "Tom", Age = 26 });
-							db.Users.Add(new User { Name = "Alice", Age = 31 });
-							db.SaveChanges();
-						}*/
+		private readonly UsersContext db = context;
 
-		}
 		/// <summary>
 		/// Methon get is used for getting all elements from database
 		/// </summary>
@@ -33,12 +30,15 @@ namespace ReserveIO.Controllers
 		/// <summary>
 		/// Methon get is used for getting element with exact id
 		/// </summary>
+		/// <param name="id">id пользователя</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="T:ReserveIO.Models.User"/>with exact id from the database </returns>
 		[HttpGet("{id}")]
 		public async Task<ActionResult<User>> Get(int id, CancellationToken cancellationToken)
 		{
-			User user = await db.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+			User? user = await db.Users.FirstOrDefaultAsync(
+				x => x.Id == id,
+				cancellationToken);
 			if (user == null)
 				return NotFound();
 			return new ObjectResult(user);
@@ -92,7 +92,7 @@ namespace ReserveIO.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<User>> Delete(int id, CancellationToken cancellationToken)
 		{
-			User user = new User { Id = id};//создание объекта-заглушки
+			var user = new User { Id = id};//создание объекта-заглушки
 			var result = db.Remove(user);
 			await db.SaveChangesAsync(cancellationToken);
 			if (result != null)
