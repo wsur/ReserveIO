@@ -3,128 +3,120 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReserveIO.Models;
 
-
 namespace ReserveIO.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class RolesController : ControllerBase
+	public class RoomController : ControllerBase
 	{
 		readonly UsersContext usersContext;
-		public RolesController(UsersContext context)
+		public RoomController(UsersContext context)
 		{
 			usersContext = context;
-
 		}
 		/// <summary>
 		/// Methon get is used for getting all elements from database
 		/// </summary>
 		/// <param name="cancellationToken">There is cancellation token</param>
-		/// <returns>All <see cref="T:ReserveIO.Models.Role"/> from the database</returns>
+		/// <returns>All <see cref="T:ReserveIO.Models.Room"/> from the database</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[Authorize]
 		[HttpGet("[action]")]
-		public async Task<ActionResult<IEnumerable<Role>>> Get(CancellationToken cancellationToken)
+		public async Task<ActionResult<IEnumerable<Room>>> Get(CancellationToken cancellationToken)
 		{
-			var s = await usersContext.Roles.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
-			return s;
+			return await usersContext.Rooms.ToListAsync(cancellationToken);//добавлен токен, который позволяет отменить запрос
 		}
 
 		/// <summary>
 		/// Methon get is used for getting element with exact id
 		/// </summary>
-		/// <param name="id">Input Role</param>
+		/// <param name="id">Input Room</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
-		/// <returns><see cref="T:ReserveIO.Models.Role"/>with exact id from the database </returns>
+		/// <returns><see cref="T:ReserveIO.Models.Room"/>with exact id from the database </returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
 		[Authorize]
-		[HttpGet("[action]/{id}")]
-		public async Task<ActionResult<Role>> Get(int id, CancellationToken cancellationToken)
+		[HttpGet("([action]/{id}")]
+		public async Task<ActionResult<Room>> Get(int id, CancellationToken cancellationToken)
 		{
-			Role? role = await usersContext.Roles.FirstOrDefaultAsync(x => x.RoleId == id, cancellationToken);
-			if (role == null)
+			Room? room = await usersContext.Rooms.FirstOrDefaultAsync(x => x.RoomId == id, cancellationToken);
+			if (room == null)
 				return NotFound();
-			return new ObjectResult(role);
+			return new ObjectResult(room);
 		}
 		/// <summary>
-		/// Method POST is used for add brand-new user to database without writing an user id
+		/// Добавление новой комнаты
 		/// </summary>
-		/// <param name="role">Input role</param>
+		/// <param name="room">Input Room</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
-		/// <returns><see cref="T:ReserveIO.Models.Role"/></returns>
+		/// <returns><see cref="T:ReserveIO.Models.Room"/></returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
-		/// <response code="401">Пользователь не авторизован/нет доступа к ресурсу</response>
 		/// <response code="500">Ошибка API (Обычно, проблема c Id, нужно оставить нулевым)</response>
-		[Authorize(Roles = "Owner")]
+		[Authorize(Roles = "Owner,Lessor")]
 		[HttpPost("[action]")]
-		public async Task<ActionResult<Role>> Post(Role role, CancellationToken cancellationToken)
+		public async Task<ActionResult<Room>> Post(Room room, CancellationToken cancellationToken)
 		{
-			if (role == null)
+			if (room == null)
 			{
 				return BadRequest();
 			}
 
-			usersContext.Roles.Add(role);
-			var r = await usersContext.SaveChangesAsync(cancellationToken);
-			if (r == 0)
-			{
-				return BadRequest("Изменения не записались в базу");
-			}
-			return Ok(role);
+			usersContext.Rooms.Add(room);
+			await usersContext.SaveChangesAsync(cancellationToken);
+			return Ok(room);
 		}
 		/// <summary>
-		/// Method PUT is used for modify existing users in the database
+		/// Изменить параметры существующей комнаты
 		/// </summary>
-		/// <param name="role">Input role</param>
+		/// <param name="room">Input Room</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
-		/// <returns><see cref="T:ReserveIO.Models.Role"/> with given id from the database if succeded</returns>
+		/// <returns><see cref="T:ReserveIO.Models.Room"/> with given id from the database if succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
-		/// <response code="401">Пользователь не авторизован/нет доступа к ресурсу</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[Authorize(Roles = "Owner")]
+		[Authorize(Roles = "Owner,Lessor")]
 		[HttpPut("[action]")]
-		public async Task<ActionResult<Role>> Put(Role role, CancellationToken cancellationToken)
+		public async Task<ActionResult<Room>> Put(Room room, CancellationToken cancellationToken)
 		{
-			if (role == null)
+			if (room == null)
 			{
 				return BadRequest();
 			}
-			if (!usersContext.Roles.Any(x => x.RoleId == role.RoleId))
+			if (!usersContext.Rooms.Any(x => x.RoomId == room.RoomId))
 			{
 				return NotFound();
 			}
 
-			usersContext.Update(role);
+			usersContext.Update(room);
 			await usersContext.SaveChangesAsync(cancellationToken);
-			return Ok(role);
+			return Ok(room);
 		}
 		/// <summary>
-		/// Method Delete is used for Deleting user that exist in database
+		/// Удалить комнату
 		/// </summary>
 		/// <param name="id">Id for user that we want to delete from the database</param>
 		/// <param name="cancellationToken">There is cancellation token</param>
 		/// <returns><see cref="M:ControllerBase.OK()"/> if operation is succeded</returns>
 		/// <response code="200">Успешное выполнение</response>
 		/// <response code="400">Ошибка API</response>
-		/// <response code="401">Пользователь не авторизован/нет доступа к ресурсу</response>
 		/// <response code="500">Ошибка API (возможно, проблема c Id)</response>
-		[Authorize(Roles = "Owner")]
+		[Authorize(Roles = "Owner,Lessor")]
 		[HttpDelete("[action]")]
-		public async Task<ActionResult<Role>> Delete(int id, CancellationToken cancellationToken)
+		public async Task<ActionResult<Room>> Delete(int id, CancellationToken cancellationToken)
 		{
-			Role? role = await usersContext.Roles.FirstOrDefaultAsync(x => x.RoleId == id, cancellationToken);
-			if (role == null)
-				return NotFound();
-			role.Delete = true;
-			usersContext.Update(role);
+			Room Room = new Room { RoomId = id };//создание объекта-заглушки
+			var result = usersContext.Remove(Room);
 			await usersContext.SaveChangesAsync(cancellationToken);
-			return Ok(role);
+			if (result != null)
+			{
+				return Ok();
+			}
+			else
+				return NotFound();
 
 		}
 	}

@@ -1,8 +1,25 @@
-﻿namespace ReserveIO.Models
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.Exchange.WebServices.Data;
+
+namespace ReserveIO.Models
 {
+	//[EntityTypeConfiguration(typeof(RoleConfiguration))]
 	public class Role
 	{
-		public int Role_ID { get; set; }
-		public string Role_Name { get; set; }
+		/// <summary>
+		/// ID Роли
+		/// </summary>
+		public int RoleId { get; set; }
+
+		/// <summary>
+		/// Роль
+		/// </summary>
+		public string RoleName { get; set; }
+
+		/// <summary>
+		/// Удалена ли из сервиса
+		/// </summary>
+		public bool Delete { get; set; }
 	}
 }

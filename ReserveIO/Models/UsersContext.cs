@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System.Reflection;
 
 namespace ReserveIO.Models
 {
@@ -11,6 +13,25 @@ namespace ReserveIO.Models
 		/// Пользователи
 		/// </summary>
 		public DbSet<User> Users { get; set; }
+
+		public DbSet<Role> Roles { get; set; }
+
+		public DbSet<UserRole> UserRoles { get; set; }
+
+		public DbSet<Service> Services { get; set; }
+
+		public DbSet<SummaryTable> SummaryTables { get; set; }
+
+		public DbSet<Room> Rooms { get; set; }
+
+		public DbSet<UserLogPass> UserLogPasses { get; set; }
+
+		public DbSet<ServiceInfo> ServiceInfos { get; set; }
+
+		public DbSet<UserRoom> UserRooms { get; set; }
+
+		public DbSet<CostHour> CostHours { get; set; }
+
 		/// <summary>
 		/// Конструктор контекста данных пользователей
 		/// </summary>
@@ -18,7 +39,9 @@ namespace ReserveIO.Models
 		public UsersContext(DbContextOptions<UsersContext> options)
 			: base(options)
 		{
-			Database.EnsureCreated();
+			//Database.EnsureDeleted();
+			//Database.EnsureCreated(); //вызов этого метода при использовании миграции вызовет ошибку
+
 		}
 		/// <summary>
 		/// Настройки при создании контекста данных
@@ -26,13 +49,67 @@ namespace ReserveIO.Models
 		/// <param name="modelBuilder"></param>
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<User>().HasData(
-				[
-					new() { Id=1, Name="Tom", Age = 23},
-					new() { Id = 2, Name = "Alice", Age = 26 },
-					new() { Id = 3, Name = "Sam", Age = 28 }
-				]);
+			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 			base.OnModelCreating(modelBuilder);
+		}
+
+		public IEnumerable<IEnumerable<object>> GetCollection()
+		{
+			//внимательно смотрите на порядок сущностей
+			IEnumerable<IEnumerable<object>> db = new List<IEnumerable<object>>()
+			{
+				CostHours.ToList(),
+				UserRooms.ToList(),
+				ServiceInfos.ToList(),
+				UserLogPasses.ToList(),
+				Rooms.ToList(),
+				SummaryTables.ToList(),
+				Services.ToList(),
+				UserRoles.ToList(),
+				Roles.ToList(),
+				Users.ToList()
+			};
+			return db;
+		}
+
+		public List<string> GetTableNamesCollection()
+		{
+			//внимательно смотрите на порядок сущностей
+			List<string> tableNames = new List<string>()
+			{
+				CostHours.EntityType.GetTableName(),
+				UserRooms.EntityType.GetTableName(),
+				ServiceInfos.EntityType.GetTableName(),
+				UserLogPasses.EntityType.GetTableName(),
+				Rooms.EntityType.GetTableName(),
+				SummaryTables.EntityType.GetTableName(),
+				Services.EntityType.GetTableName(),
+				UserRoles.EntityType.GetTableName(),
+				Roles.EntityType.GetTableName(),
+				Users.EntityType.GetTableName()
+			};
+			return tableNames;
+		}
+		public List<IEnumerable<IProperty>> GetTablePropertyNamesCollection()
+		{
+			//внимательно смотрите на порядок сущностей
+			List<IEnumerable<IProperty>> tableNames = new List<IEnumerable<IProperty>>()
+			{
+				CostHours.EntityType.GetProperties(),
+				UserRooms.EntityType.GetProperties(),
+				ServiceInfos.EntityType.GetProperties(),
+				UserLogPasses.EntityType.GetProperties(),
+				Rooms.EntityType.GetProperties(),
+				SummaryTables.EntityType.GetProperties(),
+				Services.EntityType.GetProperties(),
+				UserRoles.EntityType.GetProperties(),
+				Roles.EntityType.GetProperties(),
+				Users.EntityType.GetProperties()
+			};
+			return tableNames;
 		}
 	}
 }
+
+
+
