@@ -47,7 +47,7 @@ on:
 jobs:
 
   build:
-
+    timeout-minutes: 60  # Увеличь таймаут (по умолчанию 60 минут)
     strategy:
       matrix:
         configuration: [Debug, Release]
