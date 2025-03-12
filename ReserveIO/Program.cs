@@ -1,15 +1,9 @@
-
-using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ReserveIO.Models;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.AspNetCore.Rewrite; // Пакет с middleware URL Rewriting
 
 namespace ReserveIO
 {

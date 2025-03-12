@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Exchange.WebServices.Data;
 using ReserveIO.Models;
 
 namespace ReserveIO.Controllers

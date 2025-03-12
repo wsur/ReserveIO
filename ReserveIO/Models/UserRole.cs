@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-namespace ReserveIO.Models
+﻿namespace ReserveIO.Models
 {
 	public class UserRole
 	{

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Exchange.WebServices.Data;
 using Microsoft.IdentityModel.Tokens;
 using ReserveIO.Models;
 using System.IdentityModel.Tokens.Jwt;

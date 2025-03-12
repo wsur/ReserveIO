@@ -1,9 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Exchange.WebServices.Data;
-using System.ComponentModel.DataAnnotations;
-
-namespace ReserveIO.Models
+﻿namespace ReserveIO.Models
 {
 	//[EntityTypeConfiguration(typeof(UserConfiguration))]
 	public class User
